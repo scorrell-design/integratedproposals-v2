@@ -1,0 +1,191 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Surfaces ── */
+  --color-base: #0B1220;
+  --color-surface-glass: rgba(255, 255, 255, 0.07);
+  --color-surface-glass-light: rgba(255, 255, 255, 0.05);
+  --color-surface-glass-hover: rgba(255, 255, 255, 0.10);
+  --color-surface-glass-active: rgba(255, 255, 255, 0.12);
+
+  /* ── Borders ── */
+  --color-border-glass: rgba(255, 255, 255, 0.12);
+  --color-border-glass-light: rgba(255, 255, 255, 0.08);
+  --color-border-glass-hover: rgba(255, 255, 255, 0.18);
+
+  /* ── Accent ── */
+  --color-accent: #5ECEB0;
+  --color-accent-glow: rgba(94, 206, 176, 0.15);
+  --color-accent-muted: rgba(94, 206, 176, 0.6);
+  --color-accent-border: rgba(94, 206, 176, 0.5);
+
+  /* ── Secondary ── */
+  --color-secondary: #A78BFA;
+  --color-secondary-glow: rgba(167, 139, 250, 0.15);
+
+  /* ── Text ── */
+  --color-text-primary: #F1F5F9;
+  --color-text-secondary: rgba(241, 245, 249, 0.6);
+  --color-text-tertiary: rgba(241, 245, 249, 0.35);
+
+  /* ── Semantic ── */
+  --color-success: #34D399;
+  --color-success-glow: rgba(52, 211, 153, 0.15);
+  --color-warning: #FBBF24;
+  --color-warning-glow: rgba(251, 191, 36, 0.15);
+  --color-error: #F87171;
+  --color-error-glow: rgba(248, 113, 113, 0.15);
+
+  /* ── Fonts ── */
+  --font-body: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, monospace;
+
+  /* ── Radii ── */
+  --radius-input: 12px;
+  --radius-card: 22px;
+  --radius-card-sm: 16px;
+  --radius-pill: 9999px;
+  --radius-button: 14px;
+  --radius-segment: 10px;
+}
+
+/* ── Base ── */
+body {
+  font-family: var(--font-body);
+  color: var(--color-text-primary);
+  background: var(--color-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Number input spinners off ── */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* ── Scrollbar (subtle) ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+/* ── Glass utility classes ── */
+.glass-primary {
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 22px;
+  padding: 32px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.glass-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.glass-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: var(--color-text-primary);
+  transition: all 200ms ease;
+}
+
+.glass-input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.glass-input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(94, 206, 176, 0.5);
+  box-shadow: 0 0 0 3px rgba(94, 206, 176, 0.1);
+}
+
+.glass-hover {
+  transition: all 300ms ease-out;
+}
+.glass-hover:hover {
+  background: rgba(255, 255, 255, 0.10);
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-2px) scale(1.01);
+}
+
+.glass-selected {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(94, 206, 176, 0.5);
+  box-shadow: 0 0 24px rgba(94, 206, 176, 0.08);
+}
+
+/* ── Accent CTA button ── */
+.btn-accent {
+  background: var(--color-accent);
+  color: #0B1220;
+  border-radius: 9999px;
+  font-weight: 600;
+  padding: 12px 28px;
+  font-size: 15px;
+  transition: all 300ms ease-out;
+  border: none;
+  cursor: pointer;
+}
+.btn-accent:hover {
+  box-shadow: 0 0 20px rgba(94, 206, 176, 0.25);
+  filter: brightness(1.08);
+}
+
+/* ── Ghost / glass button ── */
+.btn-glass {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  color: var(--color-text-primary);
+  font-weight: 600;
+  padding: 10px 20px;
+  font-size: 14px;
+  transition: all 300ms ease-out;
+  cursor: pointer;
+}
+.btn-glass:hover {
+  background: rgba(255, 255, 255, 0.10);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+/* ── Noise texture overlay ── */
+.noise-overlay::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* ── Metric label style ── */
+.metric-label {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-tertiary);
+}
+
+/* ── Glass divider ── */
+.glass-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+}
