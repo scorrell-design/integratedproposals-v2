@@ -1,43 +1,35 @@
 import { useState, useCallback } from 'react';
 import { pdf } from '@react-pdf/renderer';
 import { createElement } from 'react';
-import { ProposalPDF } from '../components/pdf/ProposalPDF';
-import { useProposalStore } from '../store/proposal.store';
+import { InformedAnalysisPDF } from '../components/pdf/InformedAnalysisPDF';
+import type { InformedAnalysisPDFProps } from '../components/pdf/InformedAnalysisPDF';
 
-export function usePDFGeneration() {
+export function useInformedPDFGeneration() {
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const generatePDF = useCallback(async (): Promise<Blob | null> => {
-    const state = useProposalStore.getState();
-    if (!state.result) return null;
-
+  const generatePDF = useCallback(async (props: InformedAnalysisPDFProps): Promise<Blob | null> => {
     setIsGenerating(true);
     try {
-      const doc = createElement(ProposalPDF, {
-        company: state.company,
-        result: state.result,
-        proposalType: 'quick_proposal',
-      });
+      const doc = createElement(InformedAnalysisPDF, props);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const blob = await pdf(doc as any).toBlob();
       return blob;
     } catch (err) {
-      console.error('PDF generation failed:', err);
+      console.error('Informed Analysis PDF generation failed:', err);
       return null;
     } finally {
       setIsGenerating(false);
     }
   }, []);
 
-  const downloadPDF = useCallback(async () => {
+  const downloadPDF = useCallback(async (props: InformedAnalysisPDFProps) => {
     try {
-      const state = useProposalStore.getState();
-      const blob = await generatePDF();
+      const blob = await generatePDF(props);
       if (!blob) return null;
 
-      const companySlug = state.company.name.replace(/\s+/g, '_') || 'Company';
+      const slug = props.groupName.replace(/\s+/g, '_') || 'Company';
       const date = new Date().toISOString().split('T')[0];
-      const filename = `${companySlug}_Section125_Proposal_${date}.pdf`;
+      const filename = `${slug}_InformedAnalysis_${date}.pdf`;
 
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -50,7 +42,7 @@ export function usePDFGeneration() {
 
       return blob;
     } catch (err) {
-      console.error('PDF download failed:', err);
+      console.error('Informed Analysis PDF download failed:', err);
       return null;
     }
   }, [generatePDF]);

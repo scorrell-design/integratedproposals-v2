@@ -14,6 +14,7 @@ import { IAResultsSection } from './sections/ResultsSection';
 import { detectColumnMapping, validateFile, type ColumnMapping, type ValidationResult, type RecognizedField } from './engine/mini-file-validator';
 import { RecognizedFieldsView } from './components/RecognizedFieldsView';
 import { analyzeEmployees, type EmployeeResult } from './engine/mini-analyzer';
+import { useInformedPDFGeneration } from '@/features/proposal/hooks/useInformedPDFGeneration';
 import type { ParsedEmployeeRow, ProposalResult, PaycheckComparison, BenefitsConfig } from '@/features/proposal/types/proposal.types';
 
 type Step = 'upload' | 'mapping' | 'review' | 'results';
@@ -80,6 +81,8 @@ export function InformedAnalysisPage({ groupId: _groupId = 'demo' }: InformedAna
   const [recognizedFields, setRecognizedFields] = useState<RecognizedField[]>([]);
   const [showDisclaimer, setShowDisclaimer] = useState(false);
   const [payrollFreq, setPayrollFreq] = useState<'weekly' | 'biweekly' | 'semimonthly' | 'monthly'>('biweekly');
+
+  const { downloadPDF: downloadInformedPDF, isGenerating: isGeneratingPDF } = useInformedPDFGeneration();
 
   const rawDataRef = useRef<Record<string, string>[]>([]);
   const mappingRef = useRef<ColumnMapping>(mapping);
@@ -233,7 +236,7 @@ export function InformedAnalysisPage({ groupId: _groupId = 'demo' }: InformedAna
         )}
         {step === 'mapping' && validation && <ColumnMappingSection columns={columns} mapping={mapping} validation={validation} onUpdateMapping={handleUpdateMapping} onConfirm={handleConfirmMapping} />}
         {step === 'review' && <ValidationReviewSection employees={employees} />}
-        {step === 'results' && result && <IAResultsSection result={result} paycheckComparisons={paycheckComparisons} companyName={file?.name.replace(/\.[^.]+$/, '') ?? 'Company'} payrollFrequency={payrollFreq} employees={employees} employeeResults={employeeResults} onDownloadPDF={() => {}} onSaveDraft={() => {}} onReset={handleReset} isGeneratingPDF={false} isSaving={false} />}
+        {step === 'results' && result && <IAResultsSection result={result} paycheckComparisons={paycheckComparisons} companyName={file?.name.replace(/\.[^.]+$/, '') ?? 'Company'} payrollFrequency={payrollFreq} employees={employees} employeeResults={employeeResults} onDownloadPDF={() => downloadInformedPDF({ groupName: file?.name.replace(/\.[^.]+$/, '') ?? 'Company', result, employeeResults, payrollFrequency: payrollFreq })} onSaveDraft={() => {}} onReset={handleReset} isGeneratingPDF={isGeneratingPDF} isSaving={false} />}
       </div>
       <DisclaimerModal
         open={showDisclaimer}
