@@ -179,7 +179,6 @@ const s = StyleSheet.create({
   },
   tierMethodology: {
     fontSize: 8,
-    fontStyle: 'italic',
     color: MUTED,
     marginTop: 6,
   },
@@ -319,7 +318,7 @@ export function ProposalPDF({ company, result, proposalType, brokerName, brokerE
 
         {/* Tier Breakdown */}
         <Text style={s.sectionTitle}>Tier Breakdown</Text>
-        <Text style={{ fontSize: 9, fontStyle: 'italic', color: MUTED, marginBottom: 8 }}>Estimates based on provided data</Text>
+        <Text style={{ fontSize: 9, color: MUTED, marginBottom: 8 }}>Estimates based on provided data</Text>
         <View style={s.tierHeader}>
           <Text style={s.tierHeaderCell}>Tier</Text>
           <Text style={[s.tierHeaderCell, { textAlign: 'right' }]}># Employees (%)</Text>
