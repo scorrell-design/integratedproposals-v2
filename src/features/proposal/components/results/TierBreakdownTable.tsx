@@ -24,7 +24,7 @@ export function TierBreakdownTable({ tiers, payPeriodsPerYear = 26, totalEmploye
       {/* Header */}
       <div
         className="grid gap-4 px-6 py-2.5 text-[11px] font-medium uppercase tracking-[0.05em] text-text-tertiary"
-        style={{ background: 'rgba(255,255,255,0.08)', gridTemplateColumns: '1.2fr 1fr 1fr 1.2fr 1fr' }}
+        style={{ background: '#FAF5EC', gridTemplateColumns: '1.2fr 1fr 1fr 1.2fr 1fr' }}
       >
         <div>Tier</div>
         <div className="text-right"># Employees (%)</div>
@@ -45,7 +45,7 @@ export function TierBreakdownTable({ tiers, payPeriodsPerYear = 26, totalEmploye
               onClick={() => setExpandedTier(expandedTier === tier.tier ? null : tier.tier)}
               className="grid w-full gap-4 px-6 py-3 text-[14px] text-left transition-colors hover:bg-surface-glass-light"
               style={{
-                background: i % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.06)',
+                background: i % 2 === 0 ? '#FFFFFF' : '#FAF5EC',
                 gridTemplateColumns: '1.2fr 1fr 1fr 1.2fr 1fr',
               }}
             >
@@ -76,7 +76,7 @@ export function TierBreakdownTable({ tiers, payPeriodsPerYear = 26, totalEmploye
                   transition={{ duration: 0.2 }}
                   className="overflow-hidden"
                 >
-                  <div className="px-6 py-4" style={{ background: 'rgba(255,255,255,0.04)' }}>
+                    <div className="px-6 py-4" style={{ background: '#FAF5EC' }}>
                     <div className="grid grid-cols-2 gap-3 text-[13px]">
                       <Row label="Avg. Pre-Tax Deduction" value={formatDollar(tier.avgPreTaxDeduction)} />
                       <Row label="Employer FICA Savings" value={formatDollar(tier.ficaSavingsPerEmployee)} />

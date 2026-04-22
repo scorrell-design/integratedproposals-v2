@@ -30,8 +30,8 @@ export function HeroSection() {
         <div className="mt-6 grid grid-cols-2 gap-3">
           <GlassCard variant="secondary" className="text-left !rounded-[16px]">
             <div className="flex items-start gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.08)' }}>
-                <Users className="h-4 w-4 text-text-secondary" />
+              <div className="flex h-9 w-9 items-center justify-center rounded-full" style={{ background: '#E8F1F4' }}>
+                <Users className="h-4 w-4 text-accent" />
               </div>
               <div>
                 <p className="text-[15px] font-semibold text-text-primary">For Employees</p>
@@ -41,8 +41,8 @@ export function HeroSection() {
           </GlassCard>
           <GlassCard variant="secondary" className="text-left !rounded-[16px]">
             <div className="flex items-start gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.08)' }}>
-                <FileText className="h-4 w-4 text-text-secondary" />
+              <div className="flex h-9 w-9 items-center justify-center rounded-full" style={{ background: '#E8F1F4' }}>
+                <FileText className="h-4 w-4 text-accent" />
               </div>
               <div>
                 <p className="text-[15px] font-semibold text-text-primary">For Employers</p>

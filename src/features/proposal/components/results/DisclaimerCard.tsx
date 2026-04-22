@@ -4,7 +4,7 @@ export function DisclaimerCard() {
   return (
     <div
       className="glass-secondary"
-      style={{ borderColor: 'rgba(255,255,255,0.08)' }}
+      style={{ borderColor: '#D9CFC0' }}
     >
       <h4 className="text-[14px] font-semibold text-text-primary" style={{ marginBottom: 12 }}>
         Important Disclosures

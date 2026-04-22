@@ -76,7 +76,7 @@ export function StateDistributionSection() {
         <button
           onClick={addAllStates}
           className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-medium text-text-secondary hover:text-text-primary transition-colors"
-          style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}
+          style={{ background: '#FAF5EC', border: '1px solid #D9CFC0' }}
         >
           <Globe size={13} />
           Add All 50 States
@@ -85,7 +85,7 @@ export function StateDistributionSection() {
           <button
             onClick={clearAll}
             className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-medium text-text-tertiary hover:text-error transition-colors"
-            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+            style={{ background: '#FAF5EC', border: '1px solid #D9CFC0' }}
           >
             <Trash2 size={13} />
             Clear All
@@ -150,10 +150,9 @@ export function StateDistributionSection() {
             className="absolute z-50 mt-1 w-full overflow-y-auto !rounded-[12px]"
             style={{
               maxHeight: 240,
-              background: 'rgba(20, 30, 50, 0.95)',
-              backdropFilter: 'blur(16px)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
+              background: '#FFFFFF',
+              border: '1px solid #D9CFC0',
+              boxShadow: '0 8px 24px rgba(26, 58, 66, 0.12)',
               padding: 0,
             }}
           >

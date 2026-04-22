@@ -119,12 +119,11 @@ Your Benefits Advisor`;
                 style={{
                   maxWidth: 640,
                   maxHeight: '90vh',
-                  background: 'rgba(15, 20, 35, 0.95)',
-                  backdropFilter: 'blur(24px)',
-                  WebkitBackdropFilter: 'blur(24px)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  background: '#FFFFFF',
+                  border: '1px solid #D9CFC0',
                   borderRadius: 22,
                   padding: 32,
+                  boxShadow: '0 16px 48px rgba(26, 58, 66, 0.15)',
                 }}
                 onClick={(e) => e.stopPropagation()}
               >
@@ -241,8 +240,8 @@ Your Benefits Advisor`;
                     disabled={!email.trim() || sending}
                     className="inline-flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                     style={{
-                      background: '#5ECEB0',
-                      color: '#0B1220',
+                      background: '#C95A38',
+                      color: '#FFFFFF',
                       borderRadius: 24,
                       padding: '10px 24px',
                       fontSize: 14,
@@ -281,11 +280,11 @@ function CopyBtn({ onClick, copied }: { onClick: () => void; copied: boolean }) 
       onClick={onClick}
       className="relative flex h-9 w-9 items-center justify-center rounded-lg text-text-tertiary hover:text-text-primary hover:bg-surface-glass-light transition-colors"
     >
-      {copied ? <CheckCircle size={16} style={{ color: '#34D399' }} /> : <Copy size={16} />}
+      {copied ? <CheckCircle size={16} style={{ color: '#059669' }} /> : <Copy size={16} />}
       {copied && (
         <span
           className="absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-[11px] font-medium"
-          style={{ background: 'rgba(52, 211, 153, 0.2)', color: '#34D399' }}
+          style={{ background: 'rgba(5, 150, 105, 0.15)', color: '#059669' }}
         >
           Copied!
         </span>

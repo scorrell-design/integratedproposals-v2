@@ -30,14 +30,14 @@ export function PaycheckComparison({ tiers, payrollFrequency }: PaycheckComparis
 
       {/* Tier switcher */}
       {tiers.length > 1 && (
-        <div className="flex gap-1 px-6 py-2 overflow-x-auto" style={{ background: 'rgba(255,255,255,0.03)' }}>
+        <div className="flex gap-1 px-6 py-2 overflow-x-auto" style={{ background: '#FAF5EC' }}>
           {tiers.map((t, i) => (
             <button
               key={t.tier}
               onClick={() => setActiveTier(i)}
               className={`whitespace-nowrap rounded-full px-4 py-1.5 text-[13px] font-medium transition-all
                 ${i === activeTier
-                  ? 'bg-[rgba(255,255,255,0.12)] text-text-primary'
+                  ? 'bg-white text-text-primary shadow-sm'
                   : 'text-text-tertiary hover:text-text-secondary'}`}
             >
               {t.tier}: <span className="font-mono text-accent">+{formatDollarCents(t.perPaycheckIncrease)}</span>
@@ -58,7 +58,7 @@ export function PaycheckComparison({ tiers, payrollFrequency }: PaycheckComparis
             <PayLine label="Federal Withholding" value={-tier.before.federalTax} dim />
             <PayLine label="FICA (7.65%)" value={-tier.before.fica} dim />
             <PayLine label="State Withholding" value={-tier.before.stateTax} dim />
-            <div className="my-2" style={{ height: 1, background: 'rgba(94,206,176,0.2)' }} />
+            <div className="my-2" style={{ height: 1, background: 'rgba(0, 95, 120, 0.15)' }} />
             <SectionLabel>Net Pay</SectionLabel>
             <PayLine label="Net Pay" value={tier.before.netPay} bold size={18} />
           </div>
@@ -69,19 +69,19 @@ export function PaycheckComparison({ tiers, payrollFrequency }: PaycheckComparis
             <SectionLabel>Earnings</SectionLabel>
             <PayLine label="Gross Pay" value={tier.grossPay} />
             <SectionLabel accent>Section 125 Plan</SectionLabel>
-            <div className="rounded-md px-2 py-0.5 -mx-2" style={{ background: 'rgba(251,191,36,0.08)' }}>
+            <div className="rounded-md px-2 py-0.5 -mx-2" style={{ background: 'rgba(217, 119, 6, 0.06)' }}>
               <PayLine label="Pre-Tax Benefit Deduction" value={-tier.withPlan.preTaxDeduction} accent />
             </div>
             <SectionLabel>Taxes</SectionLabel>
             <PayLine label="Federal Withholding" value={-tier.withPlan.federalTax} dim saved={fedSaved} />
             <PayLine label="FICA" value={-tier.withPlan.fica} dim saved={ficaSaved} />
             <PayLine label="State Withholding" value={-tier.withPlan.stateTax} dim saved={stateSaved} />
-            <div className="my-2" style={{ height: 1, background: 'rgba(94,206,176,0.2)' }} />
-            <div className="rounded-md px-2 py-1 -mx-2" style={{ background: 'rgba(94,206,176,0.08)' }}>
+            <div className="my-2" style={{ height: 1, background: 'rgba(0, 95, 120, 0.15)' }} />
+            <div className="rounded-md px-2 py-1 -mx-2" style={{ background: 'rgba(0, 95, 120, 0.06)' }}>
               <PayLine label="Section 125 Benefit" value={tier.perPaycheckIncrease} accent />
             </div>
             <SectionLabel>Net Pay</SectionLabel>
-            <div className="rounded-md px-2 py-1 -mx-2" style={{ background: 'rgba(52,211,153,0.06)' }}>
+            <div className="rounded-md px-2 py-1 -mx-2" style={{ background: 'rgba(5, 150, 105, 0.06)' }}>
               <PayLine label="Net Pay" value={tier.withPlan.netPay} bold green size={18} />
             </div>
           </div>
@@ -93,7 +93,7 @@ export function PaycheckComparison({ tiers, payrollFrequency }: PaycheckComparis
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           className="mt-5 glass-secondary text-center !border-accent-border"
-          style={{ boxShadow: '0 0 30px rgba(94,206,176,0.15)' }}
+          style={{ boxShadow: '0 0 24px rgba(0, 95, 120, 0.08)' }}
         >
           <p className="font-mono text-[22px] font-bold text-accent">
             +{formatDollarCents(tier.perPaycheckIncrease)} per paycheck
@@ -107,7 +107,7 @@ export function PaycheckComparison({ tiers, payrollFrequency }: PaycheckComparis
         {/* Annual impact bar */}
         <div
           className="mt-4 grid grid-cols-3 gap-4 rounded-[14px] px-4 py-3 text-center"
-          style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
+          style={{ background: '#FAF5EC', border: '1px solid #D9CFC0' }}
         >
           <div>
             <p className="font-mono text-[20px] font-bold text-accent">{formatDollarCents(tier.annualIncrease)}</p>

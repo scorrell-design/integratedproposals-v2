@@ -21,7 +21,7 @@ export function SectionCard({
     ? 'bg-accent'
     : status === 'complete'
       ? 'bg-success'
-      : 'bg-[rgba(255,255,255,0.2)]';
+      : 'bg-synrgy-border';
 
   return (
     <motion.section

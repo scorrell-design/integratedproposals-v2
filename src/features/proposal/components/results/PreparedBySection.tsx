@@ -9,7 +9,7 @@ export function PreparedBySection({ brokerName, brokerEmail }: PreparedBySection
   return (
     <div
       className="glass-secondary"
-      style={{ borderLeft: '3px solid var(--color-accent)', borderLeftColor: 'rgba(94, 206, 176, 0.6)' }}
+      style={{ borderLeft: '3px solid rgba(0, 95, 120, 0.5)' }}
     >
       <p
         className="text-text-tertiary"

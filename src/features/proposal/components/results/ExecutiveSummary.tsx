@@ -32,7 +32,7 @@ export function ExecutiveSummary({ result, payPeriodsPerYear }: ExecutiveSummary
         </div>
 
         {/* Right — stacked KPIs */}
-        <div className="flex-[2] flex flex-col justify-center divide-y" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+        <div className="flex-[2] flex flex-col justify-center divide-y" style={{ borderColor: '#D9CFC0' }}>
           <KPICell
             value={`${result.qualifiedEmployees} of ${result.totalEmployees} (${qualifiedPct}%)`}
             label="meet program eligibility"

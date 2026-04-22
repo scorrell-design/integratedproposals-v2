@@ -40,8 +40,8 @@ export function SegmentedControl<T extends string>({
           left: sliderStyle.left,
           width: sliderStyle.width,
           height: 'calc(100% - 8px)',
-          background: 'rgba(255, 255, 255, 0.12)',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+          background: '#FFFFFF',
+          boxShadow: '0 2px 8px rgba(26, 58, 66, 0.08)',
         }}
       />
       {options.map((opt) => (

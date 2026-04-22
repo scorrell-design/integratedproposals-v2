@@ -64,7 +64,7 @@ function FlowStep({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
       className="glass-secondary w-full"
-      style={accent ? { borderLeft: '2px solid var(--color-accent)', boxShadow: '0 0 16px rgba(94,206,176,0.06)' } : {}}
+      style={accent ? { borderLeft: '2px solid var(--color-accent)', boxShadow: '0 0 16px rgba(0, 95, 120, 0.06)' } : {}}
     >
       {value && <p className={`font-mono text-[20px] font-bold ${valueClass}`}>{value}</p>}
       <p className={`${isFormula ? '' : 'mt-1'} text-[13px] text-text-secondary`}>{label}</p>
@@ -75,7 +75,7 @@ function FlowStep({
 function Connector() {
   return (
     <div className="flex flex-col items-center py-1">
-      <div className="h-4 w-px" style={{ background: 'rgba(255,255,255,0.1)' }} />
+      <div className="h-4 w-px" style={{ background: '#D9CFC0' }} />
       <ArrowDown className="h-3 w-3 text-text-tertiary" />
     </div>
   );

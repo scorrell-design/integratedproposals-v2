@@ -13,7 +13,7 @@ export function ValidationReviewSection({ employees }: ValidationReviewSectionPr
       <div className="overflow-x-auto">
         <table className="w-full text-[13px]">
           <thead>
-            <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+            <tr style={{ borderBottom: '1px solid #D9CFC0' }}>
               <th className="py-2 pr-4 text-left metric-label !text-[11px]">Name</th>
               <th className="py-2 pr-4 text-right metric-label !text-[11px]">Salary</th>
               <th className="py-2 pr-4 text-left metric-label !text-[11px]">State</th>
@@ -23,7 +23,7 @@ export function ValidationReviewSection({ employees }: ValidationReviewSectionPr
           </thead>
           <tbody>
             {preview.map((emp) => (
-              <tr key={emp.employeeId} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+              <tr key={emp.employeeId} style={{ borderBottom: '1px solid #D9CFC0' }}>
                 <td className="py-2 pr-4 font-medium text-text-primary">{emp.name}</td>
                 <td className="py-2 pr-4 text-right font-mono text-text-secondary">${emp.salary.toLocaleString()}</td>
                 <td className="py-2 pr-4 text-text-secondary">{emp.stateCode}</td>

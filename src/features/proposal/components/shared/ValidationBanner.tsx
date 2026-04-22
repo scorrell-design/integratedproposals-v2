@@ -9,20 +9,20 @@ interface ValidationBannerProps {
 
 const config: Record<BannerType, { border: string; glow: string; text: string; Icon: typeof AlertCircle }> = {
   error: {
-    border: 'border-[rgba(248,113,113,0.3)]',
-    glow: 'shadow-[0_0_16px_rgba(248,113,113,0.08)]',
+    border: 'border-[rgba(220,38,38,0.3)]',
+    glow: 'shadow-[0_0_16px_rgba(220,38,38,0.06)]',
     text: 'text-error',
     Icon: AlertCircle,
   },
   warning: {
-    border: 'border-[rgba(251,191,36,0.3)]',
-    glow: 'shadow-[0_0_16px_rgba(251,191,36,0.08)]',
+    border: 'border-[rgba(217,119,6,0.3)]',
+    glow: 'shadow-[0_0_16px_rgba(217,119,6,0.06)]',
     text: 'text-warning',
     Icon: AlertTriangle,
   },
   success: {
-    border: 'border-[rgba(52,211,153,0.3)]',
-    glow: 'shadow-[0_0_16px_rgba(52,211,153,0.08)]',
+    border: 'border-[rgba(5,150,105,0.3)]',
+    glow: 'shadow-[0_0_16px_rgba(5,150,105,0.06)]',
     text: 'text-success',
     Icon: CheckCircle,
   },

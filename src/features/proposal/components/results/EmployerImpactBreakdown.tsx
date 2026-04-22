@@ -18,7 +18,7 @@ export function EmployerImpactBreakdown({ result, payPeriodsPerYear, midTier }: 
     <div className="glass-primary !p-0 overflow-hidden">
       <div className="grid grid-cols-1 md:grid-cols-3">
         {/* Column 1 — Employer Savings */}
-        <div className="p-6" style={{ borderRight: '1px solid rgba(255,255,255,0.06)' }}>
+        <div className="p-6" style={{ borderRight: '1px solid #D9CFC0' }}>
           <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-accent-muted" style={{ marginBottom: 16 }}>
             For the Company
           </p>
@@ -28,7 +28,7 @@ export function EmployerImpactBreakdown({ result, payPeriodsPerYear, midTier }: 
         </div>
 
         {/* Column 2 — Employee Eligibility */}
-        <div className="p-6" style={{ borderRight: '1px solid rgba(255,255,255,0.06)' }}>
+        <div className="p-6" style={{ borderRight: '1px solid #D9CFC0' }}>
           <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-accent-muted" style={{ marginBottom: 16 }}>
             For Your Employees
           </p>

@@ -74,7 +74,7 @@ export function RecognizedFieldsView({ recognizedFields, rowCount, fileName, com
       {/* Status message */}
       <div style={{ marginTop: 24 }}>
         {hasRequiredMissing ? (
-          <p className="text-[13px] font-medium" style={{ color: '#F87171' }}>
+          <p className="text-[13px] font-medium" style={{ color: '#DC2626' }}>
             A required field is missing. Map the salary/compensation column to continue.
           </p>
         ) : (
@@ -91,7 +91,7 @@ function FieldRow({ field }: { field: RecognizedField }) {
   if (field.status === 'detected') {
     return (
       <div className="flex items-center gap-2.5">
-        <CheckCircle size={16} style={{ color: '#34D399', flexShrink: 0 }} />
+        <CheckCircle size={16} style={{ color: '#059669', flexShrink: 0 }} />
         <span className="text-[14px] text-text-primary">{field.label}</span>
         <span className="text-[12px] text-text-secondary">detected</span>
       </div>
@@ -101,18 +101,18 @@ function FieldRow({ field }: { field: RecognizedField }) {
   if (field.required) {
     return (
       <div className="flex items-center gap-2.5">
-        <XCircle size={16} style={{ color: '#F87171', flexShrink: 0 }} />
+        <XCircle size={16} style={{ color: '#DC2626', flexShrink: 0 }} />
         <span className="text-[14px] text-text-primary">{field.label}</span>
-        <span className="text-[12px]" style={{ color: '#F87171' }}>not detected (required)</span>
+        <span className="text-[12px]" style={{ color: '#DC2626' }}>not detected (required)</span>
       </div>
     );
   }
 
   return (
     <div className="flex items-center gap-2.5">
-      <AlertCircle size={16} style={{ color: '#FBBF24', flexShrink: 0 }} />
+      <AlertCircle size={16} style={{ color: '#D97706', flexShrink: 0 }} />
       <span className="text-[14px] text-text-primary">{field.label}</span>
-      <span className="text-[12px]" style={{ color: '#FBBF24' }}>not detected (optional)</span>
+        <span className="text-[12px]" style={{ color: '#D97706' }}>not detected (optional)</span>
     </div>
   );
 }

@@ -41,11 +41,11 @@ export function ActionBar({
           onClick={() => setShowShare(true)}
           className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-[14px] font-medium transition-all"
           style={{
-            background: 'rgba(94, 206, 176, 0.1)',
-            border: '1px solid rgba(94, 206, 176, 0.4)',
-            color: 'var(--color-accent)',
+            background: '#E8F1F4',
+            border: '1px solid rgba(0, 95, 120, 0.3)',
+            color: '#005F78',
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 0 16px rgba(94, 206, 176, 0.15)'; }}
+          onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 0 16px rgba(0, 95, 120, 0.1)'; }}
           onMouseLeave={(e) => { e.currentTarget.style.boxShadow = 'none'; }}
         >
           <Send size={18} />

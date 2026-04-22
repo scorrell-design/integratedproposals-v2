@@ -14,8 +14,8 @@ export function TotalBadge({ value, target, label = 'Total', suffix = '%' }: Tot
     <span
       className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-semibold
         ${isValid
-          ? 'border-[rgba(52,211,153,0.3)] text-success bg-[rgba(52,211,153,0.08)]'
-          : 'border-[rgba(251,191,36,0.3)] text-warning bg-[rgba(251,191,36,0.08)]'}`}
+          ? 'border-[rgba(5,150,105,0.3)] text-success bg-[rgba(5,150,105,0.08)]'
+          : 'border-[rgba(217,119,6,0.3)] text-warning bg-[rgba(217,119,6,0.08)]'}`}
     >
       {label}: {Math.round(value)}{suffix}
       {isValid && <Check size={14} className="text-current" />}

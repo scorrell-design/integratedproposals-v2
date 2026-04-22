@@ -193,7 +193,7 @@ export function ResultsSection({ groupId }: ResultsSectionProps) {
         {/* Disclaimer Banner */}
         <div
           className="flex items-center gap-2 rounded-lg px-4 py-2.5"
-          style={{ background: 'rgba(94, 206, 176, 0.06)', border: '1px solid rgba(94, 206, 176, 0.15)' }}
+          style={{ background: 'rgba(0, 95, 120, 0.05)', border: '1px solid rgba(0, 95, 120, 0.15)' }}
         >
           <Info size={15} className="flex-shrink-0 text-accent" style={{ opacity: 0.7 }} />
           <p className="text-[12px] leading-snug text-text-tertiary">{DISCLAIMER_TEXT}</p>
@@ -205,20 +205,20 @@ export function ResultsSection({ groupId }: ResultsSectionProps) {
         <div
           className="overflow-hidden rounded-[18px]"
           style={{
-            background: 'linear-gradient(135deg, #0B1220 0%, #162240 50%, #1a2d50 100%)',
-            border: '1px solid rgba(94, 206, 176, 0.15)',
+            background: 'linear-gradient(135deg, #005F78 0%, #004558 100%)',
+            border: '1px solid rgba(0, 95, 120, 0.3)',
           }}
         >
           <div className="px-8 py-10">
-            <p className="text-[13px] font-semibold uppercase tracking-[0.15em] text-accent" style={{ opacity: 0.8 }}>
+            <p className="text-[13px] font-semibold uppercase tracking-[0.15em] text-white" style={{ opacity: 0.8 }}>
               Section 125 Cafeteria Plan
             </p>
-            <h1 className="mt-3 text-[32px] font-bold leading-tight text-text-primary">
+            <h1 className="mt-3 text-[32px] font-bold leading-tight text-white">
               Congratulations {company.name || 'Your Company'}!
               <br />
-              <span className="text-accent">Your Customized Proposal is Ready</span>
+              <span style={{ color: '#FAF5EC' }}>Your Customized Proposal is Ready</span>
             </h1>
-            <p className="mt-3 text-[14px] text-text-secondary">
+            <p className="mt-3 text-[14px]" style={{ color: 'rgba(255,255,255,0.75)' }}>
               Prepared {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} &middot; {payCycleLabel} Pay Cycle
             </p>
           </div>
@@ -229,20 +229,20 @@ export function ResultsSection({ groupId }: ResultsSectionProps) {
         ═══════════════════════════════════════════════ */}
         <div className="glass-primary !p-0 overflow-hidden">
           {/* Total Employees — full-width */}
-          <div className="text-center py-5 px-6" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          <div className="text-center py-5 px-6" style={{ borderBottom: '1px solid #D9CFC0' }}>
             <p className="font-mono text-[36px] font-bold text-text-primary">{result.totalEmployees}</p>
             <p className="mt-1 text-[13px] font-medium text-text-secondary">Total Employees</p>
           </div>
 
           {/* 3-column stat row */}
           <div className="grid grid-cols-3">
-            <div className="text-center py-5 px-4" style={{ borderRight: '1px solid rgba(255,255,255,0.06)' }}>
+            <div className="text-center py-5 px-4" style={{ borderRight: '1px solid #D9CFC0' }}>
               <p className="font-mono text-[28px] font-bold text-success">{result.positivelyImpactedCount}</p>
               <p className="mt-1 text-[12px] text-text-secondary">
                 Net Pay <strong className="text-success">Increased</strong> Employees
               </p>
             </div>
-            <div className="text-center py-5 px-4" style={{ borderRight: '1px solid rgba(255,255,255,0.06)' }}>
+            <div className="text-center py-5 px-4" style={{ borderRight: '1px solid #D9CFC0' }}>
               <p className="font-mono text-[28px] font-bold text-text-secondary">{netPayReducedCount > 0 ? netPayReducedCount : 0}</p>
               <p className="mt-1 text-[12px] text-text-secondary">
                 Net Pay <strong className="text-error">Reduced</strong> Employees
@@ -264,7 +264,7 @@ export function ResultsSection({ groupId }: ResultsSectionProps) {
           <div className="grid grid-cols-3 gap-4 mb-5">
             <div
               className="rounded-[14px] p-5 text-center"
-              style={{ background: 'rgba(94, 206, 176, 0.06)', border: '1px solid rgba(94, 206, 176, 0.15)' }}
+              style={{ background: 'rgba(0, 95, 120, 0.04)', border: '1px solid rgba(0, 95, 120, 0.15)' }}
             >
               <p className="font-mono text-[24px] font-bold text-accent">{formatDollar(result.employerAnnualFICASavings)}</p>
               <p className="mt-2 text-[12px] font-medium text-text-secondary">
@@ -274,7 +274,7 @@ export function ResultsSection({ groupId }: ResultsSectionProps) {
             </div>
             <div
               className="rounded-[14px] p-5 text-center"
-              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}
+              style={{ background: '#FAF5EC', border: '1px solid #D9CFC0' }}
             >
               <p className="font-mono text-[24px] font-bold text-text-primary">{formatDollar(result.employerAnnualFICASavings / 12)}</p>
               <p className="mt-2 text-[12px] font-medium text-text-secondary">
@@ -284,7 +284,7 @@ export function ResultsSection({ groupId }: ResultsSectionProps) {
             </div>
             <div
               className="rounded-[14px] p-5 text-center"
-              style={{ background: 'rgba(52, 211, 153, 0.06)', border: '1px solid rgba(52, 211, 153, 0.15)' }}
+              style={{ background: 'rgba(5, 150, 105, 0.06)', border: '1px solid rgba(5, 150, 105, 0.15)' }}
             >
               <p className="font-mono text-[24px] font-bold text-success">{formatDollar(result.avgEmployeeAnnualSavings)}</p>
               <p className="mt-2 text-[12px] font-medium text-text-secondary">
@@ -297,7 +297,7 @@ export function ResultsSection({ groupId }: ResultsSectionProps) {
           {/* Aggregated bar */}
           <div
             className="rounded-[14px] py-5 px-6 text-center"
-            style={{ background: 'rgba(251, 191, 36, 0.06)', border: '1px solid rgba(251, 191, 36, 0.15)' }}
+            style={{ background: 'rgba(217, 119, 6, 0.05)', border: '1px solid rgba(217, 119, 6, 0.15)' }}
           >
             <p className="font-mono text-[28px] font-bold text-text-primary">{formatDollar(totalPositiveEmployeeSavings)}</p>
             <p className="mt-1 text-[13px] text-text-secondary">
@@ -318,7 +318,7 @@ export function ResultsSection({ groupId }: ResultsSectionProps) {
           {/* Table Header */}
           <div
             className="grid gap-4 px-6 py-2.5 text-[11px] font-semibold uppercase tracking-[0.05em] text-text-tertiary"
-            style={{ background: 'rgba(255,255,255,0.08)', gridTemplateColumns: '1.5fr 1fr 1fr 1fr' }}
+            style={{ background: '#FAF5EC', gridTemplateColumns: '1.5fr 1fr 1fr 1fr' }}
           >
             <div>Tier</div>
             <div className="text-right">Avg. Gross Pay</div>
@@ -332,7 +332,7 @@ export function ResultsSection({ groupId }: ResultsSectionProps) {
               key={td.tierResult.tier}
               className="grid gap-4 px-6 py-3.5 text-[14px] items-center"
               style={{
-                background: i % 2 === 0 ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.05)',
+                background: i % 2 === 0 ? '#FFFFFF' : '#FAF5EC',
                 gridTemplateColumns: '1.5fr 1fr 1fr 1fr',
               }}
             >
@@ -346,8 +346,8 @@ export function ResultsSection({ groupId }: ResultsSectionProps) {
                 <span
                   className="inline-block rounded-full px-3 py-1 font-mono font-semibold text-[13px]"
                   style={{
-                    background: td.isPositive ? 'rgba(52, 211, 153, 0.12)' : 'rgba(248, 113, 113, 0.12)',
-                    color: td.isPositive ? '#34D399' : '#F87171',
+                    background: td.isPositive ? 'rgba(5, 150, 105, 0.1)' : 'rgba(220, 38, 38, 0.08)',
+                    color: td.isPositive ? '#059669' : '#DC2626',
                   }}
                 >
                   {formatDollarCents(td.postNetPerPeriod)}
@@ -357,7 +357,7 @@ export function ResultsSection({ groupId }: ResultsSectionProps) {
           ))}
 
           {/* Pagination-style footer */}
-          <div className="px-6 py-3 text-[12px] text-text-tertiary" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+          <div className="px-6 py-3 text-[12px] text-text-tertiary" style={{ borderTop: '1px solid #D9CFC0' }}>
             Showing <strong className="text-text-secondary">1–{tierPaycheckData.length}</strong> of <strong className="text-text-secondary">{tierPaycheckData.length}</strong> tiers
           </div>
         </div>
@@ -367,16 +367,16 @@ export function ResultsSection({ groupId }: ResultsSectionProps) {
         ═══════════════════════════════════════════════ */}
         <div
           className="overflow-hidden rounded-[18px]"
-          style={{ border: '1px solid rgba(94, 206, 176, 0.2)' }}
+          style={{ border: '1px solid rgba(0, 95, 120, 0.2)' }}
         >
-          <div className="px-6 py-4" style={{ background: 'rgba(94, 206, 176, 0.04)' }}>
+          <div className="px-6 py-4" style={{ background: 'rgba(0, 95, 120, 0.03)' }}>
             <h3 className="text-[18px] font-semibold text-text-primary">Employer Breakdown</h3>
           </div>
 
           {/* Table Header */}
           <div
             className="grid gap-3 px-6 py-2.5 text-[10px] font-semibold uppercase tracking-[0.05em] text-text-tertiary"
-            style={{ background: 'rgba(255,255,255,0.06)', gridTemplateColumns: '1.3fr 1fr 1fr 1fr 1fr' }}
+            style={{ background: '#FAF5EC', gridTemplateColumns: '1.3fr 1fr 1fr 1fr 1fr' }}
           >
             <div>Tier</div>
             <div className="text-right">Employee Net Take Home Pay Change</div>
@@ -389,17 +389,17 @@ export function ResultsSection({ groupId }: ResultsSectionProps) {
           {tierPaycheckData.map((td, i) => {
             const changeColor = td.employeeNetChange > 0.01 ? 'text-success' : td.employeeNetChange < -0.01 ? 'text-error' : 'text-warning';
             const changeBg = td.employeeNetChange > 0.01
-              ? 'rgba(52, 211, 153, 0.06)'
+              ? 'rgba(5, 150, 105, 0.06)'
               : td.employeeNetChange < -0.01
-                ? 'rgba(248, 113, 113, 0.06)'
-                : 'rgba(251, 191, 36, 0.06)';
+                ? 'rgba(220, 38, 38, 0.06)'
+                : 'rgba(217, 119, 6, 0.06)';
 
             return (
               <div
                 key={td.tierResult.tier}
                 className="grid gap-3 px-6 py-3.5 text-[14px] items-center"
                 style={{
-                  background: i % 2 === 0 ? 'rgba(255,255,255,0.01)' : 'rgba(255,255,255,0.04)',
+                  background: i % 2 === 0 ? '#FFFFFF' : '#FAF5EC',
                   gridTemplateColumns: '1.3fr 1fr 1fr 1fr 1fr',
                 }}
               >
@@ -430,8 +430,8 @@ export function ResultsSection({ groupId }: ResultsSectionProps) {
         <div
           className="overflow-hidden rounded-[18px]"
           style={{
-            background: 'linear-gradient(135deg, rgba(15, 20, 35, 0.95), rgba(25, 35, 60, 0.95))',
-            border: '1px solid rgba(94, 206, 176, 0.15)',
+            background: '#FFFFFF',
+            border: '1px solid rgba(0, 95, 120, 0.15)',
           }}
         >
           <div className="px-8 py-6">
@@ -494,7 +494,7 @@ export function ResultsSection({ groupId }: ResultsSectionProps) {
               <p className="mt-1 text-[12px] text-text-tertiary">Conservative</p>
               <p className="mt-0.5 text-[11px] text-text-tertiary">If participation is lower than expected</p>
             </div>
-            <div className="glass-secondary text-center !border-accent-border" style={{ boxShadow: '0 0 24px rgba(94,206,176,0.08)' }}>
+            <div className="glass-secondary text-center !border-accent-border" style={{ boxShadow: '0 0 24px rgba(0, 95, 120, 0.06)' }}>
               <p className="font-mono text-[22px] font-bold text-accent">{formatDollar(result.savingsRange.projected)}</p>
               <p className="mt-1 text-[12px] text-accent-muted">Projected Savings</p>
               <p className="mt-0.5 text-[11px] text-text-tertiary">Based on your inputs</p>
@@ -549,8 +549,8 @@ function MathBlock({ value, suffix, label, sublabel, accent }: {
     <div
       className="w-full rounded-[14px] px-5 py-4"
       style={{
-        background: accent ? 'rgba(94, 206, 176, 0.08)' : 'rgba(255,255,255,0.04)',
-        border: accent ? '1px solid rgba(94, 206, 176, 0.25)' : '1px solid rgba(255,255,255,0.08)',
+        background: accent ? 'rgba(0, 95, 120, 0.05)' : '#FAF5EC',
+        border: accent ? '1px solid rgba(0, 95, 120, 0.2)' : '1px solid #D9CFC0',
       }}
     >
       <p className={`font-mono text-[24px] font-bold ${accent ? 'text-accent' : 'text-text-primary'}`}>

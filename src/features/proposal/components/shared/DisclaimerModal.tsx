@@ -31,15 +31,14 @@ export function DisclaimerModal({ open, onAccept, onGoBack }: DisclaimerModalPro
               className="w-full text-center"
               style={{
                 maxWidth: 520,
-                background: 'rgba(15, 20, 35, 0.95)',
-                backdropFilter: 'blur(24px)',
-                WebkitBackdropFilter: 'blur(24px)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                background: '#FFFFFF',
+                border: '1px solid #D9CFC0',
                 borderRadius: 22,
                 padding: 32,
+                boxShadow: '0 16px 48px rgba(26, 58, 66, 0.15)',
               }}
             >
-              <AlertCircle size={28} style={{ color: '#FBBF24', margin: '0 auto' }} />
+              <AlertCircle size={28} style={{ color: '#D97706', margin: '0 auto' }} />
 
               <h2
                 className="text-[20px] font-semibold text-text-primary"
@@ -78,8 +77,8 @@ export function DisclaimerModal({ open, onAccept, onGoBack }: DisclaimerModalPro
                   onClick={onAccept}
                   className="w-full transition-all"
                   style={{
-                    background: '#5ECEB0',
-                    color: '#0B1220',
+                    background: '#C95A38',
+                    color: '#FFFFFF',
                     borderRadius: 24,
                     padding: '14px 24px',
                     fontSize: 16,
@@ -88,7 +87,7 @@ export function DisclaimerModal({ open, onAccept, onGoBack }: DisclaimerModalPro
                     cursor: 'pointer',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = '0 0 24px rgba(94, 206, 176, 0.3)';
+                    e.currentTarget.style.boxShadow = '0 4px 16px rgba(201, 90, 56, 0.25)';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.boxShadow = 'none';

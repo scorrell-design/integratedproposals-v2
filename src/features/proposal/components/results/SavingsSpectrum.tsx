@@ -37,7 +37,7 @@ export function SavingsSpectrum({ range, proposalType }: SavingsSpectrumProps) {
             ref={buttonRef}
             onClick={() => setShowPopover(!showPopover)}
             className="flex h-7 w-7 items-center justify-center rounded-full transition-colors hover:bg-surface-glass-hover"
-            style={{ border: '1px solid rgba(94,206,176,0.3)' }}
+            style={{ border: '1px solid rgba(0, 95, 120, 0.3)' }}
             title="How we calculate your savings range"
           >
             <Info size={16} className="text-accent" />
@@ -52,12 +52,11 @@ export function SavingsSpectrum({ range, proposalType }: SavingsSpectrumProps) {
                 transition={{ duration: 0.15 }}
                 className="absolute left-0 top-full z-50 mt-2 w-80"
                 style={{
-                  background: 'rgba(15, 20, 35, 0.95)',
-                  backdropFilter: 'blur(16px)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  background: '#FFFFFF',
+                  border: '1px solid #D9CFC0',
                   borderRadius: 12,
                   padding: 14,
-                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
+                  boxShadow: '0 8px 24px rgba(26, 58, 66, 0.12)',
                 }}
               >
                 <p className="text-[13px] leading-[1.6] text-text-secondary">
@@ -68,7 +67,7 @@ export function SavingsSpectrum({ range, proposalType }: SavingsSpectrumProps) {
           </AnimatePresence>
         </div>
         {!isQP && (
-          <span className="glass-secondary inline-flex items-center gap-1.5 !rounded-full !px-3 !py-1 text-[12px] font-semibold text-success !border-[rgba(52,211,153,0.3)]">
+          <span className="glass-secondary inline-flex items-center gap-1.5 !rounded-full !px-3 !py-1 text-[12px] font-semibold text-success !border-[rgba(5,150,105,0.3)]">
             <ShieldCheck className="h-3.5 w-3.5" />
             High Confidence &mdash; Based on Actual Payroll Data
           </span>
@@ -89,21 +88,21 @@ export function SavingsSpectrum({ range, proposalType }: SavingsSpectrumProps) {
             className="h-full"
             style={{
               width: isQP ? '25%' : '17.5%',
-              background: 'linear-gradient(90deg, rgba(148,163,184,0.4), rgba(100,116,139,0.4))',
+              background: 'linear-gradient(90deg, #D9CFC0, #E8E0D4)',
             }}
           />
           <div
             className="h-full"
             style={{
               width: isQP ? '50%' : '65%',
-              background: 'linear-gradient(90deg, rgba(94,206,176,0.3), rgba(94,206,176,0.15))',
+              background: 'linear-gradient(90deg, rgba(0, 95, 120, 0.25), rgba(0, 95, 120, 0.12))',
             }}
           />
           <div
             className="h-full"
             style={{
               width: isQP ? '25%' : '17.5%',
-              background: 'linear-gradient(90deg, rgba(167,139,250,0.3), rgba(167,139,250,0.15))',
+              background: 'linear-gradient(90deg, rgba(201, 90, 56, 0.2), rgba(201, 90, 56, 0.1))',
             }}
           />
         </div>
@@ -113,8 +112,8 @@ export function SavingsSpectrum({ range, proposalType }: SavingsSpectrumProps) {
           className="absolute top-0 flex flex-col items-center"
           style={{ left: '50%', transform: 'translateX(-50%)' }}
         >
-          <div className="h-12 w-0.5 bg-white/80" />
-          <div className="mt-[-2px] h-2 w-2 rotate-45 bg-white/80" />
+          <div className="h-12 w-0.5" style={{ background: '#1A3A42' }} />
+          <div className="mt-[-2px] h-2 w-2 rotate-45" style={{ background: '#1A3A42' }} />
         </div>
       </div>
 
@@ -125,7 +124,7 @@ export function SavingsSpectrum({ range, proposalType }: SavingsSpectrumProps) {
           <p className="mt-1 text-[12px] text-text-tertiary">{PROPOSAL_LABELS.RANGE_LOW}</p>
           <p className="mt-0.5 text-[11px] text-text-tertiary">If participation is lower than expected</p>
         </div>
-        <div className="glass-secondary text-center !border-accent-border" style={{ boxShadow: '0 0 24px rgba(94,206,176,0.08)' }}>
+        <div className="glass-secondary text-center !border-accent-border" style={{ boxShadow: '0 0 24px rgba(0, 95, 120, 0.06)' }}>
           <p className="font-mono text-[22px] font-bold text-accent">{formatDollar(range.projected)}</p>
           <p className="mt-1 text-[12px] text-accent-muted">{PROPOSAL_LABELS.RANGE_MID}</p>
           <p className="mt-0.5 text-[11px] text-text-tertiary">Based on your inputs</p>

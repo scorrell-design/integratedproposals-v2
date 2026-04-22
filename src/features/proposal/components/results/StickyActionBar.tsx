@@ -30,10 +30,10 @@ export function StickyActionBar({
       <div
         className="fixed bottom-0 left-0 right-0 z-50"
         style={{
-          background: 'rgba(11, 18, 32, 0.85)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-          borderTop: '1px solid rgba(255,255,255,0.08)',
+          background: 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          borderTop: '1px solid #D9CFC0',
         }}
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
@@ -53,9 +53,9 @@ export function StickyActionBar({
               onClick={() => setShowShare(true)}
               className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-medium transition-all"
               style={{
-                background: 'rgba(94,206,176,0.1)',
-                border: '1px solid rgba(94,206,176,0.4)',
-                color: 'var(--color-accent)',
+                background: '#E8F1F4',
+                border: '1px solid rgba(0, 95, 120, 0.3)',
+                color: '#005F78',
               }}
             >
               <Send size={16} />

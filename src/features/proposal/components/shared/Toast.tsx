@@ -38,15 +38,13 @@ export function Toast({ message, visible, onDismiss, duration = 4000 }: ToastPro
           <div
             className="flex items-center gap-3 px-5 py-3.5"
             style={{
-              background: 'rgba(255, 255, 255, 0.1)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-              border: '1px solid rgba(52, 211, 153, 0.3)',
+              background: '#FFFFFF',
+              border: '1px solid rgba(5, 150, 105, 0.3)',
               borderRadius: 14,
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
+              boxShadow: '0 8px 32px rgba(26, 58, 66, 0.12)',
             }}
           >
-            <CheckCircle size={18} style={{ color: '#34D399', flexShrink: 0 }} />
+            <CheckCircle size={18} style={{ color: '#059669', flexShrink: 0 }} />
             <span className="text-[14px] text-text-primary whitespace-nowrap">{message}</span>
           </div>
         </motion.div>

@@ -45,7 +45,7 @@ export function BenefitsSection() {
       <div className="flex items-center justify-between mb-4">
         <span
           className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-medium text-text-secondary"
-          style={{ background: 'rgba(94, 206, 176, 0.08)', border: '1px solid rgba(94, 206, 176, 0.2)' }}
+          style={{ background: '#E8F1F4', border: '1px solid rgba(0, 95, 120, 0.2)' }}
         >
           <Info size={13} className="text-accent" />
           Using preset values based on U.S. national averages
@@ -53,7 +53,7 @@ export function BenefitsSection() {
         <button
           onClick={handleResetToDefaults}
           className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-medium text-text-secondary hover:text-text-primary transition-colors"
-          style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}
+          style={{ background: '#FAF5EC', border: '1px solid #D9CFC0' }}
         >
           <RotateCcw size={13} />
           Reset to Industry Average
@@ -65,7 +65,7 @@ export function BenefitsSection() {
         <button
           onClick={() => setBenefits({ enabled: !benefits.enabled })}
           className="relative h-6 w-11 rounded-full transition-colors flex-shrink-0"
-          style={{ background: benefits.enabled ? 'var(--color-accent)' : 'rgba(255,255,255,0.12)' }}
+          style={{ background: benefits.enabled ? 'var(--color-accent)' : '#D9CFC0' }}
         >
           <span
             className="absolute left-0 top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform"
@@ -100,7 +100,7 @@ export function BenefitsSection() {
               onClick={() => setActiveTab(tab)}
               className={`rounded-[10px] px-4 py-1.5 text-[14px] font-medium transition-all
                 ${activeTab === tab
-                  ? 'bg-[rgba(255,255,255,0.12)] text-text-primary shadow-sm'
+                  ? 'bg-white text-text-primary shadow-sm'
                   : 'text-text-secondary hover:text-text-primary'}`}
             >
               {tab}

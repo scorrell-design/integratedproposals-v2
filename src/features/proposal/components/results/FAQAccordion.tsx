@@ -65,7 +65,7 @@ export function FAQAccordion() {
               )}
             </AnimatePresence>
             {i < FAQ_ITEMS.length - 1 && (
-              <div className="h-px" style={{ background: 'rgba(255,255,255,0.04)' }} />
+              <div className="h-px" style={{ background: '#D9CFC0' }} />
             )}
           </div>
         ))}

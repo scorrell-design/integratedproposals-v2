@@ -36,7 +36,7 @@ export function ImplementationTimeline() {
             left: '10%',
             right: '10%',
             height: 2,
-            background: 'linear-gradient(90deg, rgba(94,206,176,0.4), rgba(94,206,176,0.15))',
+            background: 'linear-gradient(90deg, rgba(0, 95, 120, 0.3), rgba(0, 95, 120, 0.1))',
           }}
         />
 
@@ -45,8 +45,8 @@ export function ImplementationTimeline() {
             <div
               className="relative z-10 mx-auto flex h-12 w-12 items-center justify-center rounded-full"
               style={{
-                background: 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(94,206,176,0.3)',
+                background: '#E8F1F4',
+                border: '1px solid rgba(0, 95, 120, 0.2)',
               }}
             >
               <step.icon size={24} className="text-accent" />
@@ -55,7 +55,7 @@ export function ImplementationTimeline() {
             <p className="mt-1 text-[13px] font-medium text-accent">{step.timeline}</p>
             <p className="mt-2 text-[13px] text-text-secondary leading-relaxed">{step.description}</p>
             {i < STEPS.length - 1 && (
-              <div className="my-4 h-px md:hidden" style={{ background: 'rgba(255,255,255,0.06)' }} />
+              <div className="my-4 h-px md:hidden" style={{ background: '#D9CFC0' }} />
             )}
           </div>
         ))}

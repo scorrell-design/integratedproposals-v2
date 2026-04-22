@@ -31,9 +31,9 @@ export function MethodologyPanel({ factors, conservative, optimal, onClose }: Me
         transition={{ type: 'spring', damping: 28, stiffness: 300 }}
         className="fixed right-0 top-0 z-[101] flex h-full w-full max-w-xl flex-col overflow-y-auto"
         style={{
-          background: 'rgba(11, 18, 32, 0.92)',
-          backdropFilter: 'blur(24px) saturate(150%)',
-          borderLeft: '1px solid rgba(255,255,255,0.08)',
+          background: '#FFFFFF',
+          borderLeft: '1px solid #D9CFC0',
+          boxShadow: '-8px 0 32px rgba(26, 58, 66, 0.1)',
         }}
       >
         <div className="flex items-center justify-between border-b border-border-glass-light px-6 py-5">
@@ -59,7 +59,7 @@ export function MethodologyPanel({ factors, conservative, optimal, onClose }: Me
                   <p className="text-[15px] font-semibold text-text-primary">{factor.name}</p>
                   <span
                     className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[12px] font-medium text-text-tertiary"
-                    style={{ background: 'rgba(255,255,255,0.06)' }}
+                    style={{ background: '#FAF5EC' }}
                   >
                     {factor.weight}%
                   </span>
@@ -67,8 +67,8 @@ export function MethodologyPanel({ factors, conservative, optimal, onClose }: Me
                 <p className="text-[14px] text-text-secondary mb-4">{factor.description}</p>
 
                 {/* Impact bar */}
-                <div className="relative h-6 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
-                  <div className="absolute inset-y-0 left-1/2 w-px" style={{ background: 'rgba(255,255,255,0.15)' }} />
+                <div className="relative h-6 rounded-full overflow-hidden" style={{ background: '#FAF5EC' }}>
+                  <div className="absolute inset-y-0 left-1/2 w-px" style={{ background: '#D9CFC0' }} />
                   {/* Conservative (left of center) */}
                   <div
                     className="absolute inset-y-0 rounded-l-full"
@@ -84,7 +84,7 @@ export function MethodologyPanel({ factors, conservative, optimal, onClose }: Me
                     style={{
                       left: '50%',
                       width: `${rightPct}%`,
-                      background: 'rgba(94, 206, 176, 0.3)',
+                      background: 'rgba(0, 95, 120, 0.25)',
                     }}
                   />
                 </div>

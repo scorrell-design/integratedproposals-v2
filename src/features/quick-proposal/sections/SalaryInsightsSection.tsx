@@ -68,7 +68,7 @@ export function SalaryInsightsSection() {
           >
             <div
               className="glass-secondary mb-6 flex items-center justify-between !rounded-[12px]"
-              style={{ borderColor: 'rgba(251,191,36,0.25)' }}
+              style={{ borderColor: 'rgba(217, 119, 6, 0.2)' }}
             >
               <p className="text-[13px] text-text-secondary">
                 These values were loaded from the <span className="font-semibold text-text-primary">{presetBanner}</span> preset. Edit any row to customize.

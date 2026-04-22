@@ -4,11 +4,11 @@ import { InformedAnalysisPage } from './features/informed-analysis/InformedAnaly
 
 function NavHeader() {
   return (
-    <header className="relative z-20" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+    <header className="relative z-20" style={{ borderBottom: '1px solid #D9CFC0' }}>
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         <Link to="/" className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-accent">
-            <span className="text-[13px] font-bold text-base">Q</span>
+            <span className="text-[13px] font-bold text-white">Q</span>
           </div>
           <span className="text-[16px] font-semibold text-text-primary">Infinity Portal</span>
         </Link>

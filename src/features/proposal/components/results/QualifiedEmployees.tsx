@@ -24,7 +24,7 @@ export function QualifiedEmployees({
         animate={{ opacity: 1, x: 0 }}
         className="glass-secondary flex items-start gap-3"
       >
-        <div className="flex h-10 w-10 items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.08)' }}>
+        <div className="flex h-10 w-10 items-center justify-center rounded-full" style={{ background: '#E8F1F4' }}>
           <CheckCircle className="h-5 w-5 text-success" />
         </div>
         <div>
@@ -43,7 +43,7 @@ export function QualifiedEmployees({
         animate={{ opacity: 1, x: 0 }}
         className="glass-secondary flex items-start gap-3"
       >
-        <div className="flex h-10 w-10 items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.08)' }}>
+        <div className="flex h-10 w-10 items-center justify-center rounded-full" style={{ background: '#E8F1F4' }}>
           <TrendingUp className="h-5 w-5 text-success" />
         </div>
         <div>
