@@ -7,10 +7,8 @@ function NavHeader() {
     <header className="relative z-20" style={{ borderBottom: '1px solid #D9CFC0' }}>
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         <Link to="/" className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-accent">
-            <span className="text-[13px] font-bold text-white">Q</span>
-          </div>
-          <span className="text-[16px] font-semibold text-text-primary">Infinity Portal</span>
+          <img src="/synrgy-orb.png" alt="SYNRGY" className="h-8 w-8 rounded-full object-cover" />
+          <span className="text-[16px] font-semibold text-text-primary">SYNRGY</span>
         </Link>
         <nav className="flex gap-1">
           {[
