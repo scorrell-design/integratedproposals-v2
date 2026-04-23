@@ -35,26 +35,27 @@ export function useProposalCalculation() {
       const employeeCount = Math.round(company.employeeCount * (tier.workforcePercent / 100));
       const avgSalary = (tier.salaryMin + tier.salaryMax) / 2;
 
-      let healthPremiumAnnual = 0;
-      let retirementRate = 0;
-      let hsaAnnual = 0;
+      const hcEnabled = benefits.enabled && benefits.healthcare.enabled;
+      const hc = benefits.healthcare;
 
-      if (benefits.enabled) {
-        if (benefits.healthcare.enabled) {
-          const avgPremium = (benefits.healthcare.premiums.medical.individual + benefits.healthcare.premiums.medical.family) / 2;
-          healthPremiumAnnual = avgPremium * 12;
-        }
-        if (benefits.retirement.enabled) {
-          retirementRate = benefits.retirement.contributionRates[tier.level] ?? 6;
-        }
-        if (benefits.hsa.enabled) {
-          hsaAnnual = benefits.hsa.annualContribution;
-        }
-      }
+      const medAvg = (hc.medical.premiums.individual + hc.medical.premiums.family) / 2;
+      const denAvg = (hc.dental.premiums.individual + hc.dental.premiums.family) / 2;
+      const visAvg = (hc.vision.premiums.individual + hc.vision.premiums.family) / 2;
+
+      const retirementRate = benefits.enabled && benefits.retirement.enabled
+        ? (benefits.retirement.contributionRates[tier.level] ?? 6)
+        : 0;
+      const hsaAnnual = benefits.enabled && benefits.hsa.enabled
+        ? benefits.hsa.annualContribution
+        : 0;
 
       const preTaxDeduction = estimatePreTaxDeductions(avgSalary, tier.level, {
-        healthParticipation: benefits.enabled && benefits.healthcare.enabled ? benefits.healthcare.participationRate : 0,
-        healthPremiumAnnual,
+        medicalParticipation: hcEnabled ? hc.medical.participationRate : 0,
+        medicalPremiumAnnual: medAvg * 12,
+        dentalParticipation: hcEnabled ? hc.dental.participationRate : 0,
+        dentalPremiumAnnual: denAvg * 12,
+        visionParticipation: hcEnabled ? hc.vision.participationRate : 0,
+        visionPremiumAnnual: visAvg * 12,
         retirementParticipation: benefits.enabled && benefits.retirement.enabled ? benefits.retirement.participationRate : 0,
         retirementRate,
         hsaParticipation: benefits.enabled && benefits.hsa.enabled ? benefits.hsa.participationRate : 0,

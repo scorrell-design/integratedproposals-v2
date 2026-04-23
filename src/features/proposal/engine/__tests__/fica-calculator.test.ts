@@ -116,52 +116,60 @@ describe('calculateEmployeeFICA', () => {
   });
 });
 
+const ZERO_BENEFITS = {
+  medicalParticipation: 0,
+  medicalPremiumAnnual: 0,
+  dentalParticipation: 0,
+  dentalPremiumAnnual: 0,
+  visionParticipation: 0,
+  visionPremiumAnnual: 0,
+  retirementParticipation: 0,
+  retirementRate: 0,
+  hsaParticipation: 0,
+  hsaAnnual: 0,
+};
+
 describe('estimatePreTaxDeductions', () => {
   it('returns default deduction when no benefits configured', () => {
-    const deduction = estimatePreTaxDeductions(60000, 'mid', {
-      healthParticipation: 0,
-      healthPremiumAnnual: 0,
-      retirementParticipation: 0,
-      retirementRate: 0,
-      hsaParticipation: 0,
-      hsaAnnual: 0,
-    });
-
+    const deduction = estimatePreTaxDeductions(60000, 'mid', ZERO_BENEFITS);
     expect(deduction).toBe(60000 * 0.10);
   });
 
-  it('includes health premium when participation > 0', () => {
+  it('includes medical premium when participation > 0', () => {
     const deduction = estimatePreTaxDeductions(60000, 'mid', {
-      healthParticipation: 100,
-      healthPremiumAnnual: 6000,
-      retirementParticipation: 0,
-      retirementRate: 0,
-      hsaParticipation: 0,
-      hsaAnnual: 0,
+      ...ZERO_BENEFITS,
+      medicalParticipation: 100,
+      medicalPremiumAnnual: 6000,
     });
-
     expect(deduction).toBe(6000);
   });
 
   it('scales deduction by participation rate', () => {
     const full = estimatePreTaxDeductions(60000, 'mid', {
-      healthParticipation: 100,
-      healthPremiumAnnual: 6000,
-      retirementParticipation: 0,
-      retirementRate: 0,
-      hsaParticipation: 0,
-      hsaAnnual: 0,
+      ...ZERO_BENEFITS,
+      medicalParticipation: 100,
+      medicalPremiumAnnual: 6000,
     });
 
     const half = estimatePreTaxDeductions(60000, 'mid', {
-      healthParticipation: 50,
-      healthPremiumAnnual: 6000,
-      retirementParticipation: 0,
-      retirementRate: 0,
-      hsaParticipation: 0,
-      hsaAnnual: 0,
+      ...ZERO_BENEFITS,
+      medicalParticipation: 50,
+      medicalPremiumAnnual: 6000,
     });
 
     expect(half).toBe(full / 2);
+  });
+
+  it('sums all three healthcare sub-benefits independently', () => {
+    const deduction = estimatePreTaxDeductions(60000, 'mid', {
+      ...ZERO_BENEFITS,
+      medicalParticipation: 100,
+      medicalPremiumAnnual: 6000,
+      dentalParticipation: 50,
+      dentalPremiumAnnual: 1200,
+      visionParticipation: 80,
+      visionPremiumAnnual: 600,
+    });
+    expect(deduction).toBe(6000 + 600 + 480);
   });
 });

@@ -36,26 +36,25 @@ export function analyzeEmployees(
   const employeeResults: EmployeeResult[] = employees.map((emp) => {
     const tierLevel = getTierLevel(emp.salary);
 
-    let healthPremiumAnnual = 0;
-    let retirementRate = 0;
-    let hsaAnnual = 0;
+    const hcEnabled = config.benefits.enabled && config.benefits.healthcare.enabled;
+    const hc = config.benefits.healthcare;
 
-    if (config.benefits.enabled) {
-      if (config.benefits.healthcare.enabled) {
-        const premium = (config.benefits.healthcare.premiums.medical.individual + config.benefits.healthcare.premiums.medical.family) / 2;
-        healthPremiumAnnual = premium * 12;
-      }
-      if (config.benefits.retirement.enabled) {
-        retirementRate = 6;
-      }
-      if (config.benefits.hsa.enabled) {
-        hsaAnnual = config.benefits.hsa.annualContribution;
-      }
-    }
+    const medAvg = (hc.medical.premiums.individual + hc.medical.premiums.family) / 2;
+    const denAvg = (hc.dental.premiums.individual + hc.dental.premiums.family) / 2;
+    const visAvg = (hc.vision.premiums.individual + hc.vision.premiums.family) / 2;
+
+    const retirementRate = config.benefits.enabled && config.benefits.retirement.enabled ? 6 : 0;
+    const hsaAnnual = config.benefits.enabled && config.benefits.hsa.enabled
+      ? config.benefits.hsa.annualContribution
+      : 0;
 
     const preTaxDeduction = estimatePreTaxDeductions(emp.salary, tierLevel, {
-      healthParticipation: config.benefits.enabled && config.benefits.healthcare.enabled ? config.benefits.healthcare.participationRate : 0,
-      healthPremiumAnnual,
+      medicalParticipation: hcEnabled ? hc.medical.participationRate : 0,
+      medicalPremiumAnnual: medAvg * 12,
+      dentalParticipation: hcEnabled ? hc.dental.participationRate : 0,
+      dentalPremiumAnnual: denAvg * 12,
+      visionParticipation: hcEnabled ? hc.vision.participationRate : 0,
+      visionPremiumAnnual: visAvg * 12,
       retirementParticipation: config.benefits.enabled && config.benefits.retirement.enabled ? config.benefits.retirement.participationRate : 0,
       retirementRate,
       hsaParticipation: config.benefits.enabled && config.benefits.hsa.enabled ? config.benefits.hsa.participationRate : 0,

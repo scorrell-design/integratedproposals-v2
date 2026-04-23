@@ -70,8 +70,12 @@ export function estimatePreTaxDeductions(
   salary: number,
   tierLevel: string,
   benefits: {
-    healthParticipation: number;
-    healthPremiumAnnual: number;
+    medicalParticipation: number;
+    medicalPremiumAnnual: number;
+    dentalParticipation: number;
+    dentalPremiumAnnual: number;
+    visionParticipation: number;
+    visionPremiumAnnual: number;
     retirementParticipation: number;
     retirementRate: number;
     hsaParticipation: number;
@@ -80,14 +84,13 @@ export function estimatePreTaxDeductions(
 ): number {
   let total = 0;
 
-  const healthChance = benefits.healthParticipation / 100;
-  total += benefits.healthPremiumAnnual * healthChance;
+  total += benefits.medicalPremiumAnnual * (benefits.medicalParticipation / 100);
+  total += benefits.dentalPremiumAnnual * (benefits.dentalParticipation / 100);
+  total += benefits.visionPremiumAnnual * (benefits.visionParticipation / 100);
 
-  const retirementChance = benefits.retirementParticipation / 100;
-  total += salary * (benefits.retirementRate / 100) * retirementChance;
+  total += salary * (benefits.retirementRate / 100) * (benefits.retirementParticipation / 100);
 
-  const hsaChance = benefits.hsaParticipation / 100;
-  total += benefits.hsaAnnual * hsaChance;
+  total += benefits.hsaAnnual * (benefits.hsaParticipation / 100);
 
   if (total === 0) {
     const defaultDeductionRates: Record<string, number> = {

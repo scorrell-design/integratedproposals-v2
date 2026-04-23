@@ -9,17 +9,10 @@ import { DollarInput } from '@/features/proposal/components/shared/DollarInput';
 const BENEFIT_TABS = ['Healthcare', 'Retirement', 'HSA'] as const;
 type BenefitTab = typeof BENEFIT_TABS[number];
 
-const DEFAULT_BENEFITS_VALUES = {
-  healthcare: {
-    participationRate: 75,
-    premiums: {
-      medical: { individual: 200, family: 775 },
-      dental: { individual: 35, family: 85 },
-      vision: { individual: 15, family: 40 },
-    },
-  },
-  retirement: { participationRate: 60, contributionRates: { entry: 4, mid: 6, senior: 8, executive: 10 } },
-  hsa: { participationRate: 30, annualContribution: 1500 },
+const HC_DEFAULTS = {
+  medical: { participationRate: 75, premiums: { individual: 200, family: 775 } },
+  dental: { participationRate: 75, premiums: { individual: 35, family: 85 } },
+  vision: { participationRate: 75, premiums: { individual: 15, family: 40 } },
 };
 
 export function BenefitsSection() {
@@ -29,36 +22,24 @@ export function BenefitsSection() {
 
   const handleResetToDefaults = useCallback(() => {
     setBenefits({
-      healthcare: {
-        ...benefits.healthcare,
-        participationRate: DEFAULT_BENEFITS_VALUES.healthcare.participationRate,
-        premiums: DEFAULT_BENEFITS_VALUES.healthcare.premiums,
-      },
+      healthcare: { ...benefits.healthcare, ...HC_DEFAULTS },
       retirement: {
         ...benefits.retirement,
-        participationRate: DEFAULT_BENEFITS_VALUES.retirement.participationRate,
-        contributionRates: DEFAULT_BENEFITS_VALUES.retirement.contributionRates,
+        participationRate: 60,
+        contributionRates: { entry: 4, mid: 6, senior: 8, executive: 10 },
       },
-      hsa: {
-        ...benefits.hsa,
-        participationRate: DEFAULT_BENEFITS_VALUES.hsa.participationRate,
-      },
+      hsa: { ...benefits.hsa, participationRate: 30 },
     });
   }, [benefits, setBenefits]);
 
-  const updatePremium = useCallback(
-    (type: 'medical' | 'dental' | 'vision', side: 'individual' | 'family', val: number) => {
+  const updateHcField = useCallback(
+    (benefit: 'medical' | 'dental' | 'vision', field: 'participationRate' | 'individual' | 'family', val: number) => {
+      const cur = benefits.healthcare[benefit];
+      const updated = field === 'participationRate'
+        ? { ...cur, participationRate: val }
+        : { ...cur, premiums: { ...cur.premiums, [field]: val } };
       setBenefits({
-        healthcare: {
-          ...benefits.healthcare,
-          premiums: {
-            ...benefits.healthcare.premiums,
-            [type]: {
-              ...benefits.healthcare.premiums[type],
-              [side]: val,
-            },
-          },
-        },
+        healthcare: { ...benefits.healthcare, [benefit]: updated },
       });
     },
     [benefits.healthcare, setBenefits],
@@ -128,84 +109,64 @@ export function BenefitsSection() {
           ))}
         </div>
 
-        {/* ── Healthcare Tab ── */}
+        {/* Healthcare Tab */}
         {activeTab === 'Healthcare' && (
-          <div>
-            <div className="flex items-center gap-4 mb-6" style={{ maxWidth: 400 }}>
-              <span className="text-[14px] font-medium text-text-primary">Participation Rate</span>
-              <PercentInput
-                value={benefits.healthcare.participationRate}
-                onChange={(val) => setBenefits({ healthcare: { ...benefits.healthcare, participationRate: val } })}
-              />
-            </div>
-
-            <div className="glass-secondary !rounded-[14px]">
-              <div className="grid grid-cols-[1fr_1fr_1fr] gap-x-4 gap-y-0">
-                {/* Headers */}
-                <div />
-                <div className="text-center text-[12px] font-semibold text-text-secondary uppercase tracking-wide pb-3">
-                  Individual
-                </div>
-                <div className="text-center text-[12px] font-semibold text-text-secondary uppercase tracking-wide pb-3">
-                  Family
-                </div>
-
-                {/* Medical */}
-                <div className="flex items-center text-[14px] font-medium text-text-primary py-2">Medical</div>
-                <div className="flex flex-col items-center py-2">
-                  <DollarInput
-                    value={benefits.healthcare.premiums.medical.individual}
-                    onChange={(v) => updatePremium('medical', 'individual', v)}
-                  />
-                  <span className="text-[11px] text-text-tertiary mt-1">Monthly premium per employee</span>
-                </div>
-                <div className="flex flex-col items-center py-2">
-                  <DollarInput
-                    value={benefits.healthcare.premiums.medical.family}
-                    onChange={(v) => updatePremium('medical', 'family', v)}
-                  />
-                  <span className="text-[11px] text-text-tertiary mt-1">Monthly premium per employee</span>
-                </div>
-
-                {/* Dental */}
-                <div className="flex items-center text-[14px] font-medium text-text-primary py-2">Dental</div>
-                <div className="flex flex-col items-center py-2">
-                  <DollarInput
-                    value={benefits.healthcare.premiums.dental.individual}
-                    onChange={(v) => updatePremium('dental', 'individual', v)}
-                  />
-                  <span className="text-[11px] text-text-tertiary mt-1">Monthly premium per employee</span>
-                </div>
-                <div className="flex flex-col items-center py-2">
-                  <DollarInput
-                    value={benefits.healthcare.premiums.dental.family}
-                    onChange={(v) => updatePremium('dental', 'family', v)}
-                  />
-                  <span className="text-[11px] text-text-tertiary mt-1">Monthly premium per employee</span>
-                </div>
-
-                {/* Vision */}
-                <div className="flex items-center text-[14px] font-medium text-text-primary py-2">Vision</div>
-                <div className="flex flex-col items-center py-2">
-                  <DollarInput
-                    value={benefits.healthcare.premiums.vision.individual}
-                    onChange={(v) => updatePremium('vision', 'individual', v)}
-                  />
-                  <span className="text-[11px] text-text-tertiary mt-1">Monthly premium per employee</span>
-                </div>
-                <div className="flex flex-col items-center py-2">
-                  <DollarInput
-                    value={benefits.healthcare.premiums.vision.family}
-                    onChange={(v) => updatePremium('vision', 'family', v)}
-                  />
-                  <span className="text-[11px] text-text-tertiary mt-1">Monthly premium per employee</span>
-                </div>
+          <div className="glass-secondary !rounded-[14px]" style={{ padding: 24 }}>
+            {/* Column headers */}
+            <div
+              className="grid items-end"
+              style={{ gridTemplateColumns: '1fr 100px 140px 140px', gap: '0 24px', marginBottom: 12 }}
+            >
+              <div />
+              <div className="text-center text-[11px] font-semibold text-text-secondary uppercase" style={{ letterSpacing: '0.5px' }}>
+                Participation
+              </div>
+              <div className="text-center text-[11px] font-semibold text-text-secondary uppercase" style={{ letterSpacing: '0.5px' }}>
+                Individual
+              </div>
+              <div className="text-center text-[11px] font-semibold text-text-secondary uppercase" style={{ letterSpacing: '0.5px' }}>
+                Family
               </div>
             </div>
+
+            {/* Rows */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {(['medical', 'dental', 'vision'] as const).map((benefit) => (
+                <div
+                  key={benefit}
+                  className="grid items-center"
+                  style={{ gridTemplateColumns: '1fr 100px 140px 140px', gap: '0 24px' }}
+                >
+                  <div className="text-[14px] font-medium text-text-primary capitalize">{benefit}</div>
+                  <div className="flex justify-center">
+                    <PercentInput
+                      value={benefits.healthcare[benefit].participationRate}
+                      onChange={(v) => updateHcField(benefit, 'participationRate', v)}
+                    />
+                  </div>
+                  <div className="flex justify-center">
+                    <DollarInput
+                      value={benefits.healthcare[benefit].premiums.individual}
+                      onChange={(v) => updateHcField(benefit, 'individual', v)}
+                    />
+                  </div>
+                  <div className="flex justify-center">
+                    <DollarInput
+                      value={benefits.healthcare[benefit].premiums.family}
+                      onChange={(v) => updateHcField(benefit, 'family', v)}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-[11px] text-text-tertiary" style={{ marginTop: 16 }}>
+              Monthly premium per employee
+            </p>
           </div>
         )}
 
-        {/* ── Retirement Tab ── */}
+        {/* Retirement Tab */}
         {activeTab === 'Retirement' && (
           <div>
             <div className="flex items-center gap-4 mb-6" style={{ maxWidth: 400 }}>
@@ -264,7 +225,7 @@ export function BenefitsSection() {
           </div>
         )}
 
-        {/* ── HSA Tab ── */}
+        {/* HSA Tab */}
         {activeTab === 'HSA' && (
           <div>
             <div className="flex items-center gap-4" style={{ maxWidth: 400, marginBottom: 24 }}>
