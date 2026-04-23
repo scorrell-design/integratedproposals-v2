@@ -7,6 +7,7 @@ interface DollarInputProps {
   max?: number;
   placeholder?: string;
   disabled?: boolean;
+  label?: string;
 }
 
 export function DollarInput({
@@ -16,6 +17,7 @@ export function DollarInput({
   max = 99999,
   placeholder = '0',
   disabled = false,
+  label,
 }: DollarInputProps) {
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,20 +30,25 @@ export function DollarInput({
   );
 
   return (
-    <div className="relative inline-flex items-center" style={{ maxWidth: 100 }}>
-      <span className="pointer-events-none absolute left-2.5 text-[13px] text-text-tertiary">$</span>
-      <input
-        type="number"
-        value={value || ''}
-        onChange={handleChange}
-        placeholder={placeholder}
-        disabled={disabled}
-        min={min}
-        max={max}
-        step={1}
-        className="glass-input w-full py-2 pl-7 pr-3 text-right font-mono text-[15px] font-semibold
-                   disabled:opacity-40"
-      />
+    <div className="flex flex-col" style={{ gap: 8 }}>
+      {label && (
+        <label className="text-[14px] font-medium text-text-secondary">{label}</label>
+      )}
+      <div className="relative inline-flex items-center" style={{ maxWidth: 100 }}>
+        <span className="pointer-events-none absolute left-2.5 text-[13px] text-text-tertiary">$</span>
+        <input
+          type="number"
+          value={value || ''}
+          onChange={handleChange}
+          placeholder={placeholder}
+          disabled={disabled}
+          min={min}
+          max={max}
+          step={1}
+          className="glass-input w-full py-2 pl-7 pr-3 text-right font-mono text-[15px] font-semibold
+                     disabled:opacity-40"
+        />
+      </div>
     </div>
   );
 }

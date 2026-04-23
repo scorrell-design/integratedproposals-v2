@@ -50,6 +50,7 @@ export interface ProposalState {
   setIndustry: (preset: IndustryPreset) => void;
   setTierCount: (count: 2 | 3 | 4 | 5) => void;
   setTiers: (tiers: SalaryTier[]) => void;
+  updateTier: (index: number, tier: Partial<SalaryTier>) => void;
   setBenefits: (benefits: Partial<BenefitsConfig>) => void;
   setResult: (result: ProposalResult | null) => void;
   setIsCalculating: (val: boolean) => void;
@@ -85,6 +86,13 @@ export const useProposalStore = create<ProposalState>((set) => ({
   setTierCount: (tierCount) => set({ tierCount }),
 
   setTiers: (tiers) => set({ tiers }),
+
+  updateTier: (index, updates) =>
+    set((s) => {
+      const tiers = [...s.tiers];
+      tiers[index] = { ...tiers[index], ...updates };
+      return { tiers };
+    }),
 
   setBenefits: (updates) =>
     set((s) => ({ benefits: { ...s.benefits, ...updates } })),
