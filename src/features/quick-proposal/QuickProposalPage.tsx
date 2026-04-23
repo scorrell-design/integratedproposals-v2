@@ -14,7 +14,7 @@ import { SalaryInsightsSection } from './sections/SalaryInsightsSection';
 import { BenefitsSection } from './sections/BenefitsSection';
 import { ResultsSection } from './sections/ResultsSection';
 
-const DISCLAIMER_TEXT = 'This proposal is for illustrative purposes only and does not constitute a guarantee of savings. Actual results may vary based on final enrollment, payroll data, and plan configuration.';
+const DISCLAIMER_TEXT = 'This proposal is for illustrative purposes only and does not constitute a guarantee of savings. Calculations apply the full standard FICA rate (6.2% Social Security + 1.45% Medicare) and 2026 federal tax tables. Actual results may vary based on final enrollment, payroll data, and plan configuration.';
 
 interface QuickProposalPageProps {
   groupId?: string;
@@ -73,7 +73,6 @@ export function QuickProposalPage({ groupId = 'demo' }: QuickProposalPageProps) 
   return (
     <GlassBackground>
       <div className="mx-auto max-w-6xl px-4 py-8">
-        {/* Disclaimer Banner */}
         <div
           className="mb-6 flex items-center gap-2 rounded-lg px-4 py-2.5"
           style={{ background: 'rgba(0, 95, 120, 0.05)', border: '1px solid rgba(0, 95, 120, 0.15)' }}
@@ -94,7 +93,6 @@ export function QuickProposalPage({ groupId = 'demo' }: QuickProposalPageProps) 
             <SalaryInsightsSection />
             <BenefitsSection />
 
-            {/* Generate Proposal Button */}
             {!showResults && (
               <div className="glass-primary text-center">
                 <button
@@ -121,13 +119,12 @@ export function QuickProposalPage({ groupId = 'demo' }: QuickProposalPageProps) 
                 </button>
                 <p className="mt-4 text-[13px] text-text-tertiary">
                   {canGenerate
-                    ? 'Benefits and Social Security are optional. Your proposal will include them if configured.'
+                    ? 'Benefits configuration is optional. Your proposal will include them if configured.'
                     : 'Complete all required sections above to generate your proposal.'}
                 </p>
               </div>
             )}
 
-            {/* Results Section */}
             {showResults && (
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
