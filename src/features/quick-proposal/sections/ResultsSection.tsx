@@ -234,9 +234,9 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
         </div>
 
         {/* B3 — KPI Row */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, marginTop: 48 }}>
-          <KpiCard label="Anticipated Employee Participation Rate" value={`${participationRate}%`} caption="estimated voluntary participation among eligible employees based on internal modeling assumptions and historical participation patterns" />
-          <KpiCard label="Annual Company Savings" value={formatDollar(netSavings)} caption="estimated total employer payroll tax savings" />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', alignItems: 'stretch', gap: 24, marginTop: 48 }}>
+          <KpiCard label="Anticipated Employee Participation Rate" value={`${participationRate}%`} caption="estimated voluntary participation among eligible employees" />
+          <KpiCard label="Annual Company Savings" value={formatDollar(Math.abs(netSavings))} caption="estimated total employer payroll tax savings" />
           <KpiCard label="Per Employee Benefit" value={formatDollar(perEmployeeBenefit)} caption="average annual take-home pay increase per qualified employee" />
         </div>
 
@@ -613,14 +613,17 @@ function KpiCard({ label, value, caption }: { label: string; value: string; capt
     <div
       style={{
         ...CARD_STYLE,
-        padding: '32px 24px',
+        padding: '28px 24px',
         textAlign: 'center',
         borderLeft: `4px solid ${INK}`,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
       }}
     >
-      <p style={{ fontWeight: 600, fontSize: 16, color: INK, margin: 0 }}>{label}</p>
-      <p style={{ fontFamily: FONT_MONO, fontWeight: 700, fontSize: 56, color: INK, margin: '8px 0', lineHeight: 1 }}>{value}</p>
-      <p style={{ fontWeight: 400, fontSize: 13, color: TERTIARY, margin: 0 }}>{caption}</p>
+      <p style={{ fontWeight: 600, fontSize: 15, letterSpacing: 0, color: INK, margin: 0 }}>{label}</p>
+      <p style={{ fontFamily: FONT_MONO, fontWeight: 700, fontSize: 36, color: INK, margin: '12px 0', lineHeight: 1 }}>{value}</p>
+      <p style={{ fontWeight: 400, fontSize: 12, color: TERTIARY, margin: 0, lineHeight: 1.5 }}>{caption}</p>
     </div>
   );
 }
