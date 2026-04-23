@@ -25,9 +25,6 @@ const BORDER = 'var(--color-synrgy-border)';
 const WHITE = 'var(--color-surface-glass)';
 const SUCCESS = 'var(--color-success)';
 const ERROR = 'var(--color-error)';
-const ORANGE = 'var(--color-synrgy-orange)';
-const FONT_DISPLAY = '"Playfair Display", Georgia, serif';
-const FONT_BODY = 'var(--font-body)';
 const FONT_MONO = 'var(--font-mono)';
 
 const CARD_STYLE: React.CSSProperties = {
@@ -185,7 +182,7 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
   const activePaycheck = activePaycheckTab === 'benefit' ? benefittingEmployee : nonBenefittingEmployee;
 
   return (
-    <div id="results" style={{ fontFamily: FONT_BODY, background: CREAM, borderRadius: 22, overflow: 'hidden' }}>
+    <div id="results" style={{ background: CREAM, borderRadius: 22, overflow: 'hidden' }}>
       {/* B1 — Sticky Header */}
       <div
         style={{
@@ -204,20 +201,9 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <ShieldCheck size={22} style={{ color: INK }} />
-          <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 600, fontSize: 18, color: INK }}>The SYNRGY Plan</span>
+          <span style={{ fontWeight: 600, fontSize: 18, color: INK }}>The SYNRGY Plan</span>
         </div>
-        <button
-          style={{
-            background: TEAL,
-            color: '#fff',
-            borderRadius: 8,
-            padding: '10px 22px',
-            fontWeight: 600,
-            fontSize: 14,
-            border: 'none',
-            cursor: 'pointer',
-          }}
-        >
+        <button className="btn-glass">
           Contact Us
         </button>
       </div>
@@ -228,7 +214,7 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
           <div style={{ maxHeight: 96, marginBottom: 24 }}>
             <ShieldCheck size={64} style={{ color: INK, margin: '0 auto' }} />
           </div>
-          <h1 style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 36, color: INK, margin: 0 }}>
+          <h1 style={{ fontWeight: 700, fontSize: 36, color: INK, margin: 0 }}>
             Your Customized SYNRGY Proposal
           </h1>
           <div style={{ width: 80, height: 2, background: TEAL, margin: '12px auto 16px' }} />
@@ -256,7 +242,7 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
 
         {/* B4 — Key Benefits */}
         <div style={{ marginTop: 56, textAlign: 'center' }}>
-          <h2 style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 20, color: INK, marginBottom: 20 }}>Key Benefits</h2>
+          <h2 style={{ fontWeight: 600, fontSize: 20, color: INK, marginBottom: 20 }}>Key Benefits</h2>
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 10 }}>
             {KEY_BENEFITS.map((b) => (
               <span
@@ -280,7 +266,7 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
 
         {/* B5 — How We Calculate */}
         <Card style={{ marginTop: 56, textAlign: 'center' }}>
-          <h2 style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 22, color: INK, marginBottom: 16 }}>How We Calculate</h2>
+          <h2 style={{ fontWeight: 600, fontSize: 22, color: INK, marginBottom: 16 }}>How We Calculate</h2>
           <p style={{ fontWeight: 400, fontSize: 15, color: MUTED, maxWidth: 820, margin: '0 auto', lineHeight: 1.65 }}>
             {HOW_WE_CALCULATE}
           </p>
@@ -289,7 +275,7 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
         {/* B6 — Paycheck Comparison */}
         <Card style={{ marginTop: 40 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }} onClick={() => setPaycheckOpen(!paycheckOpen)}>
-            <h2 style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 22, color: INK, margin: 0 }}>Paycheck Comparison</h2>
+            <h2 style={{ fontWeight: 600, fontSize: 22, color: INK, margin: 0 }}>Paycheck Comparison</h2>
             {paycheckOpen ? <Minus size={20} style={{ color: MUTED }} /> : <Plus size={20} style={{ color: MUTED }} />}
           </div>
 
@@ -312,7 +298,7 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
                     <>
                       {/* Employee Profile */}
                       <div style={{ textAlign: 'center', marginBottom: 24 }}>
-                        <h3 style={{ fontFamily: FONT_DISPLAY, fontWeight: 600, fontSize: 16, color: INK, margin: 0 }}>Employee Profile</h3>
+                        <h3 style={{ fontWeight: 600, fontSize: 16, color: INK, margin: 0 }}>Employee Profile</h3>
                         <div style={{ width: 60, height: 2, background: TEAL, margin: '8px auto 16px' }} />
                         <div style={{ display: 'flex', justifyContent: 'center', gap: 40 }}>
                           <ProfileStat label="Annual Salary" value={formatDollar(activePaycheck.tierResult.avgSalary)} />
@@ -376,7 +362,7 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
 
                       {/* Annual Impact Summary */}
                       <div style={{ textAlign: 'center', marginTop: 24 }}>
-                        <h3 style={{ fontFamily: FONT_DISPLAY, fontWeight: 600, fontSize: 16, color: INK, margin: 0 }}>Annual Impact Summary</h3>
+                        <h3 style={{ fontWeight: 600, fontSize: 16, color: INK, margin: 0 }}>Annual Impact Summary</h3>
                         <div style={{ width: 60, height: 2, background: TEAL, margin: '8px auto 16px' }} />
                         <div style={{ display: 'flex', justifyContent: 'center', gap: 60 }}>
                           <ProfileStat label="Annual Take-Home Increase" value={formatDollarCents(activePaycheck.annualIncrease)} />
@@ -399,7 +385,7 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
         {/* B7 — Detailed Analysis */}
         <Card style={{ marginTop: 40 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }} onClick={() => setDetailedOpen(!detailedOpen)}>
-            <h2 style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 22, color: INK, margin: 0 }}>Detailed Analysis</h2>
+            <h2 style={{ fontWeight: 600, fontSize: 22, color: INK, margin: 0 }}>Detailed Analysis</h2>
             {detailedOpen ? <Minus size={20} style={{ color: MUTED }} /> : <Plus size={20} style={{ color: MUTED }} />}
           </div>
 
@@ -415,7 +401,7 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginTop: 20 }}>
                   <InnerCard>
                     <div style={{ textAlign: 'center' }}>
-                      <h3 style={{ fontFamily: FONT_DISPLAY, fontWeight: 600, fontSize: 18, color: INK, margin: 0 }}>Employee Eligibility</h3>
+                      <h3 style={{ fontWeight: 600, fontSize: 18, color: INK, margin: 0 }}>Employee Eligibility</h3>
                       <div style={{ width: 60, height: 2, background: TEAL, margin: '8px auto 20px' }} />
                     </div>
                     <DetailRow label="Total Eligible Employees" value={String(result.totalEmployees)} />
@@ -426,7 +412,7 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
 
                   <InnerCard>
                     <div style={{ textAlign: 'center' }}>
-                      <h3 style={{ fontFamily: FONT_DISPLAY, fontWeight: 600, fontSize: 18, color: INK, margin: 0 }}>Financial Impact</h3>
+                      <h3 style={{ fontWeight: 600, fontSize: 18, color: INK, margin: 0 }}>Financial Impact</h3>
                       <div style={{ width: 60, height: 2, background: TEAL, margin: '8px auto 20px' }} />
                     </div>
                     <DetailRow label="Employer Annual Savings (Net of Fees):" value={formatDollar(netSavings)} />
@@ -458,7 +444,7 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
 
         {/* B8 — Value Proposition */}
         <div style={{ marginTop: 56, textAlign: 'center' }}>
-          <h2 style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 24, color: INK, marginBottom: 28 }}>Value Proposition</h2>
+          <h2 style={{ fontWeight: 600, fontSize: 24, color: INK, marginBottom: 28 }}>Value Proposition</h2>
           <div
             style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}
             className="value-prop-grid"
@@ -483,7 +469,7 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
                   >
                     {i + 1}
                   </div>
-                  <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 16, color: INK }}>{vp.title}</span>
+                  <span style={{ fontWeight: 600, fontSize: 16, color: INK }}>{vp.title}</span>
                 </div>
                 <p style={{ fontWeight: 400, fontSize: 14, color: MUTED, lineHeight: 1.5, margin: 0 }}>{vp.body}</p>
               </InnerCard>
@@ -493,7 +479,7 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
 
         {/* B9 — FAQ */}
         <Card style={{ marginTop: 56 }}>
-          <h2 style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 22, color: INK, marginBottom: 20, textAlign: 'center' }}>Frequently Asked Questions</h2>
+          <h2 style={{ fontWeight: 600, fontSize: 22, color: INK, marginBottom: 20, textAlign: 'center' }}>Frequently Asked Questions</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {FAQ_ITEMS.map((item, i) => (
               <div key={i}>
@@ -543,7 +529,7 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
 
         {/* B10 — CTA */}
         <Card style={{ marginTop: 56, textAlign: 'center' }}>
-          <h2 style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 24, color: INK, margin: 0 }}>
+          <h2 style={{ fontWeight: 600, fontSize: 24, color: INK, margin: 0 }}>
             Ready to boost employee satisfaction and reduce tax liability?
           </h2>
           <p style={{ fontWeight: 400, fontSize: 16, color: MUTED, marginTop: 12 }}>
@@ -553,7 +539,7 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
 
         {/* B11 — Disclaimer */}
         <div style={{ marginTop: 40, textAlign: 'center', background: CREAM_SOFT, border: `1px solid ${BORDER}`, borderRadius: 16, padding: 24 }}>
-          <h3 style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 18, color: INK, marginBottom: 12 }}>Disclaimer</h3>
+          <h3 style={{ fontWeight: 600, fontSize: 18, color: INK, marginBottom: 12 }}>Disclaimer</h3>
           <p style={{ fontWeight: 400, fontSize: 13, color: MUTED, lineHeight: 1.6, margin: 0 }}>
             {DISCLAIMER_TEXT}
           </p>
@@ -571,7 +557,6 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
               gap: 10,
               fontSize: 16,
               padding: '14px 32px',
-              borderRadius: 10,
               opacity: isGenerating ? 0.6 : 1,
               cursor: isGenerating ? 'not-allowed' : 'pointer',
             }}
