@@ -91,9 +91,7 @@ export function QuickProposalPage({ groupId = 'demo' }: QuickProposalPageProps) 
   const handleDisclaimerAccept = useCallback(() => {
     setShowDisclaimer(false);
     setShowResults(true);
-    setTimeout(() => {
-      document.getElementById('results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'instant' }));
   }, []);
 
   const handleDisclaimerBack = useCallback(() => {

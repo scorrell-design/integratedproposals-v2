@@ -231,7 +231,7 @@ export function InformedAnalysisPage({ groupId: _groupId = 'demo' }: InformedAna
     setPaycheckComparisons(c);
     setEmployeeResults(er);
     setStep('results');
-    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'instant' }));
   }, [confirmedFreq]);
 
   const handleDisclaimerBack = useCallback(() => {
