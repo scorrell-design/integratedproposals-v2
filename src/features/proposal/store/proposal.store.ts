@@ -14,8 +14,8 @@ const DEFAULT_BENEFITS: BenefitsConfig = {
   enabled: false,
   healthcare: {
     enabled: true,
-    medical: { participationRate: 75, premiums: { individual: 200, family: 775 } },
-    dental: { participationRate: 75, premiums: { individual: 35, family: 85 } },
+    medical: { participationRate: 75, premiums: { individual: 600, family: 1800 } },
+    dental: { participationRate: 75, premiums: { individual: 45, family: 85 } },
     vision: { participationRate: 75, premiums: { individual: 15, family: 40 } },
   },
   retirement: {

@@ -1,4 +1,4 @@
-import { calculateEmployeeFICA, calculateSavingsRange, estimatePreTaxDeductions } from '@/features/proposal/engine';
+import { calculateEmployeeFICA, calculateSavingsRange, estimatePreTaxDeductions, calculateEmployerAnnualSavings } from '@/features/proposal/engine';
 import { ADMIN_FEE_ANNUAL } from '@/config/fica-rates';
 import type { ParsedEmployeeRow, ProposalResult, TierResult, PaycheckComparison } from '@/features/proposal/types/proposal.types';
 import type { BenefitsConfig } from '@/features/proposal/types/proposal.types';
@@ -80,7 +80,21 @@ export function analyzeEmployees(
     };
   });
 
-  const totalEmployerSavings = employeeResults.reduce((s, r) => s + r.employerFICASavings, 0);
+  // --- Employer Annual Savings: hard-rule formula ---
+  const hcEnabled = config.benefits.enabled && config.benefits.healthcare.enabled;
+  const hc = config.benefits.healthcare;
+  let directEmployerSavings = 0;
+  if (hcEnabled) {
+    const medAvg = (hc.medical.premiums.individual + hc.medical.premiums.family) / 2;
+    const denAvg = (hc.dental.premiums.individual + hc.dental.premiums.family) / 2;
+    const visAvg = (hc.vision.premiums.individual + hc.vision.premiums.family) / 2;
+
+    directEmployerSavings += calculateEmployerAnnualSavings(employees.length, medAvg, hc.medical.participationRate);
+    directEmployerSavings += calculateEmployerAnnualSavings(employees.length, denAvg, hc.dental.participationRate);
+    directEmployerSavings += calculateEmployerAnnualSavings(employees.length, visAvg, hc.vision.participationRate);
+  }
+
+  const totalEmployerSavings = Math.round(directEmployerSavings);
   const totalEmployeeSavings = employeeResults.reduce((s, r) => s + r.netImpact, 0);
   const qualifiedCount = employeeResults.filter((r) => r.isQualified).length;
   const positiveCount = employeeResults.filter((r) => r.isPositive).length;

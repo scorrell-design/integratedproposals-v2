@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calculateEmployeeFICA, getFederalMarginalRate, estimatePreTaxDeductions } from '../fica-calculator';
+import { calculateEmployeeFICA, getFederalMarginalRate, estimatePreTaxDeductions, calculateEmployerAnnualSavings } from '../fica-calculator';
 
 describe('getFederalMarginalRate', () => {
   it('returns 10% for low-income single filer', () => {
@@ -113,6 +113,36 @@ describe('calculateEmployeeFICA', () => {
 
     expect(result.employerFICASavings).toBe(0);
     expect(result.isQualified).toBe(false);
+  });
+});
+
+describe('calculateEmployerAnnualSavings', () => {
+  it('1 employee, $900/mo, 100% participation → $826.20', () => {
+    expect(calculateEmployerAnnualSavings(1, 900, 100)).toBeCloseTo(826.20, 2);
+  });
+
+  it('1 employee, $1,200/mo, 100% participation → $1,101.60', () => {
+    expect(calculateEmployerAnnualSavings(1, 1200, 100)).toBeCloseTo(1101.60, 2);
+  });
+
+  it('1 employee, $1,600/mo, 100% participation → $1,468.80', () => {
+    expect(calculateEmployerAnnualSavings(1, 1600, 100)).toBeCloseTo(1468.80, 2);
+  });
+
+  it('150 employees, $1,200/mo, 100% participation → $165,240', () => {
+    expect(calculateEmployerAnnualSavings(150, 1200, 100)).toBeCloseTo(165240, 0);
+  });
+
+  it('150 employees, $1,200/mo, 70% participation → $115,668', () => {
+    expect(calculateEmployerAnnualSavings(150, 1200, 70)).toBeCloseTo(115668, 0);
+  });
+
+  it('0 employees returns 0', () => {
+    expect(calculateEmployerAnnualSavings(0, 1200, 100)).toBe(0);
+  });
+
+  it('0% participation returns 0', () => {
+    expect(calculateEmployerAnnualSavings(150, 1200, 0)).toBe(0);
   });
 });
 

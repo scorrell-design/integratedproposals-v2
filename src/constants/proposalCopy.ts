@@ -1,4 +1,4 @@
-export const DISCLAIMER_TEXT = 'This proposal is for illustrative purposes only and does not constitute a guarantee of savings. Calculations apply the full standard FICA rate (6.2% Social Security + 1.45% Medicare) and 2026 federal tax tables. Actual results may vary based on final enrollment, payroll data, and plan configuration.';
+export const DISCLAIMER_TEXT = 'This proposal is for illustrative purposes only and does not constitute a guarantee of savings. Calculations apply the full standard FICA rate (6.2% Social Security + 1.45% Medicare) and 2026 federal tax tables. Actual results may vary based on final enrollment, payroll data, and plan configuration. Example values shown use a standard $1,200/month medical premium — the most commonly selected plan tier. Your actual results will reflect the premiums entered.';
 
 export const KEY_BENEFITS = [
   'Data-Driven Oversight',

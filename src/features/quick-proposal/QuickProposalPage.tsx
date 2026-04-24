@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from 'react';
-import { motion } from 'framer-motion';
-import { ArrowRight, Info } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, Info, Sparkles } from 'lucide-react';
 import { useProposalStore } from '@/features/proposal/store/proposal.store';
 import { useProposalCalculation } from '@/features/proposal/hooks/useProposalCalculation';
 import { GlassBackground } from '@/features/proposal/components/shared/GlassBackground';
@@ -13,12 +13,20 @@ import { FilingStatusSection } from './sections/FilingStatusSection';
 import { SalaryInsightsSection } from './sections/SalaryInsightsSection';
 import { BenefitsSection } from './sections/BenefitsSection';
 import { ResultsSection } from './sections/ResultsSection';
+import type { SalaryTier } from '@/features/proposal/types/proposal.types';
 
-const DISCLAIMER_TEXT = 'This proposal is for illustrative purposes only and does not constitute a guarantee of savings. Calculations apply the full standard FICA rate (6.2% Social Security + 1.45% Medicare) and 2026 federal tax tables. Actual results may vary based on final enrollment, payroll data, and plan configuration.';
+const DISCLAIMER_TEXT = 'This proposal is for illustrative purposes only and does not constitute a guarantee of savings. Calculations apply the full standard FICA rate (6.2% Social Security + 1.45% Medicare) and 2026 federal tax tables. Actual results may vary based on final enrollment, payroll data, and plan configuration. Example values shown use a standard $1,200/month medical premium — the most commonly selected plan tier. Your actual results will reflect the premiums entered.';
 
 interface QuickProposalPageProps {
   groupId?: string;
 }
+
+const HYPOTHETICAL_TIERS: SalaryTier[] = [
+  { label: 'Entry / Part-Time', level: 'entry', salaryMin: 25000, salaryMax: 40000, workforcePercent: 25 },
+  { label: 'Mid-Level', level: 'mid', salaryMin: 40000, salaryMax: 65000, workforcePercent: 35 },
+  { label: 'Senior', level: 'senior', salaryMin: 65000, salaryMax: 100000, workforcePercent: 25 },
+  { label: 'Executive', level: 'executive', salaryMin: 100000, salaryMax: 180000, workforcePercent: 15 },
+];
 
 export function QuickProposalPage({ groupId = 'demo' }: QuickProposalPageProps) {
   useProposalCalculation();
@@ -26,6 +34,28 @@ export function QuickProposalPage({ groupId = 'demo' }: QuickProposalPageProps) 
   const [activeSection, setActiveSection] = useState('company');
   const [showResults, setShowResults] = useState(false);
   const [showDisclaimer, setShowDisclaimer] = useState(false);
+  const [showHypotheticalConfirm, setShowHypotheticalConfirm] = useState(false);
+
+  const handleFillHypothetical = useCallback(() => {
+    store.setCompany({ name: 'Sample Industries, Inc.', employeeCount: 150, payrollFrequency: 'biweekly' });
+    store.setStates([{ stateCode: 'TX', stateName: 'Texas', stateTaxRate: 0, workforcePercent: 100 }]);
+    store.setFilingStatus({ single: 40, married: 45, headOfHousehold: 15 });
+    store.setTierCount(4);
+    store.setTiers(HYPOTHETICAL_TIERS);
+    store.setBenefits({
+      enabled: true,
+      healthcare: {
+        enabled: true,
+        medical: { participationRate: 75, premiums: { individual: 600, family: 1800 } },
+        dental: { participationRate: 75, premiums: { individual: 45, family: 85 } },
+        vision: { participationRate: 75, premiums: { individual: 15, family: 40 } },
+      },
+      retirement: { enabled: false, participationRate: 60, contributionRates: { entry: 4, mid: 6, senior: 8, executive: 10 } },
+      hsa: { enabled: false, participationRate: 30, annualContribution: 1500 },
+    });
+    setShowHypotheticalConfirm(false);
+    setShowResults(false);
+  }, [store]);
 
   const stateTotal = store.states.reduce((s, st) => s + st.workforcePercent, 0);
   const filingTotal = store.filingStatus.single + store.filingStatus.married + store.filingStatus.headOfHousehold;
@@ -73,12 +103,31 @@ export function QuickProposalPage({ groupId = 'demo' }: QuickProposalPageProps) 
   return (
     <GlassBackground>
       <div className="mx-auto max-w-6xl px-4 py-8">
-        <div
-          className="mb-6 flex items-center gap-2 rounded-lg px-4 py-2.5"
-          style={{ background: 'rgba(0, 95, 120, 0.05)', border: '1px solid rgba(0, 95, 120, 0.15)' }}
-        >
-          <Info size={15} className="flex-shrink-0 text-accent" style={{ opacity: 0.7 }} />
-          <p className="text-[12px] leading-snug text-text-tertiary">{DISCLAIMER_TEXT}</p>
+        <div className="mb-6 flex items-center justify-between gap-4">
+          <div
+            className="flex flex-1 items-center gap-2 rounded-lg px-4 py-2.5"
+            style={{ background: 'rgba(0, 95, 120, 0.05)', border: '1px solid rgba(0, 95, 120, 0.15)' }}
+          >
+            <Info size={15} className="flex-shrink-0 text-accent" style={{ opacity: 0.7 }} />
+            <p className="text-[12px] leading-snug text-text-tertiary">{DISCLAIMER_TEXT}</p>
+          </div>
+          <div className="flex flex-col items-end flex-shrink-0">
+            <button
+              onClick={() => setShowHypotheticalConfirm(true)}
+              className="inline-flex items-center gap-2 rounded-[14px] px-4 py-2 text-[13px] font-semibold transition-colors whitespace-nowrap"
+              style={{
+                background: '#FFFFFF',
+                border: '1px solid var(--color-synrgy-ink)',
+                color: 'var(--color-synrgy-ink)',
+              }}
+            >
+              <Sparkles size={14} style={{ color: 'var(--color-synrgy-teal)' }} />
+              Use Hypothetical Example
+            </button>
+            <p className="text-[11px] text-text-tertiary mt-1 text-right">
+              For demos, always use hypothetical data — never a real group's figures.
+            </p>
+          </div>
         </div>
 
         <div className="flex gap-8">
@@ -142,6 +191,73 @@ export function QuickProposalPage({ groupId = 'demo' }: QuickProposalPageProps) 
         onAccept={handleDisclaimerAccept}
         onGoBack={handleDisclaimerBack}
       />
+
+      {/* Hypothetical pre-fill confirmation */}
+      <AnimatePresence>
+        {showHypotheticalConfirm && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[80]"
+              style={{ background: 'rgba(0, 0, 0, 0.5)' }}
+              onClick={() => setShowHypotheticalConfirm(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.97 }}
+              transition={{ duration: 0.25 }}
+              className="fixed inset-0 z-[90] flex items-center justify-center p-4"
+            >
+              <div
+                className="w-full text-center"
+                style={{
+                  maxWidth: 440,
+                  background: '#FFFFFF',
+                  border: '1px solid #D9CFC0',
+                  borderRadius: 22,
+                  padding: 32,
+                  boxShadow: '0 16px 48px rgba(26, 58, 66, 0.15)',
+                }}
+              >
+                <Sparkles size={28} style={{ color: 'var(--color-synrgy-teal)', margin: '0 auto' }} />
+                <h2 className="text-[20px] font-semibold text-text-primary" style={{ marginTop: 16 }}>
+                  Use Hypothetical Example?
+                </h2>
+                <p className="text-[14px] text-text-secondary" style={{ marginTop: 12, lineHeight: 1.6 }}>
+                  Replace current values with a sample scenario?
+                </p>
+                <div className="mx-auto flex flex-col items-center" style={{ marginTop: 24, gap: 12, maxWidth: 300 }}>
+                  <button
+                    onClick={handleFillHypothetical}
+                    className="w-full transition-all"
+                    style={{
+                      background: '#C95A38',
+                      color: '#FFFFFF',
+                      borderRadius: 24,
+                      padding: '14px 24px',
+                      fontSize: 16,
+                      fontWeight: 600,
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Yes, Fill Example Data
+                  </button>
+                  <button
+                    onClick={() => setShowHypotheticalConfirm(false)}
+                    className="text-[14px] text-text-tertiary hover:text-text-secondary hover:underline transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </GlassBackground>
   );
 }

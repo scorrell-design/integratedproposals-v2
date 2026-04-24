@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Upload, FileSpreadsheet } from 'lucide-react';
+import { Upload, FileSpreadsheet, Download } from 'lucide-react';
 import { SectionCard } from '@/features/proposal/components/shared/SectionCard';
 
 interface FileUploadSectionProps {
@@ -49,6 +49,20 @@ export function FileUploadSection({ onFileSelected, currentFile }: FileUploadSec
             <p className="text-[13px] text-text-tertiary mt-1">or click to browse — CSV, XLS, XLSX</p>
           </>
         )}
+      </div>
+
+      <div className="mt-4">
+        <a
+          href="/samples/sample-census-150.csv"
+          download
+          className="inline-flex items-center gap-1.5 text-[13px] font-medium text-text-primary hover:underline transition-colors"
+        >
+          <Download size={14} />
+          Download sample file
+        </a>
+        <p className="text-[11px] text-text-tertiary mt-1">
+          Hypothetical 150-employee group for demos and testing.
+        </p>
       </div>
     </SectionCard>
   );

@@ -368,6 +368,9 @@ export function ProposalPDF({ company, result, proposalType, brokerName, brokerE
           <Text style={s.disclaimerText}>
             Projected Savings represents the most likely outcome based on provided data. Actual savings may fall within the Conservative Estimate to Optimal Savings range shown above.
           </Text>
+          <Text style={s.disclaimerText}>
+            Example values shown use a standard $1,200/month medical premium — the most commonly selected plan tier. Your actual results will reflect the premiums entered.
+          </Text>
         </View>
 
         {/* Footer */}

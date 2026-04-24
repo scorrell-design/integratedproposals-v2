@@ -10,8 +10,8 @@ const BENEFIT_TABS = ['Healthcare', 'Retirement', 'HSA'] as const;
 type BenefitTab = typeof BENEFIT_TABS[number];
 
 const HC_DEFAULTS = {
-  medical: { participationRate: 75, premiums: { individual: 200, family: 775 } },
-  dental: { participationRate: 75, premiums: { individual: 35, family: 85 } },
+  medical: { participationRate: 75, premiums: { individual: 600, family: 1800 } },
+  dental: { participationRate: 75, premiums: { individual: 45, family: 85 } },
   vision: { participationRate: 75, premiums: { individual: 15, family: 40 } },
 };
 

@@ -556,6 +556,9 @@ export function InformedAnalysisPDF({ groupName, result, employeeResults, payrol
           <Text style={s.disclaimerText}>
             This document is for informational purposes only and does not constitute tax, legal, or financial advice. Consult with a qualified tax professional before implementing a Section 125 Cafeteria Plan.
           </Text>
+          <Text style={s.disclaimerText}>
+            Example values shown use a standard $1,200/month medical premium — the most commonly selected plan tier. Your actual results will reflect the premiums entered.
+          </Text>
         </View>
 
         <View style={s.footer} fixed>

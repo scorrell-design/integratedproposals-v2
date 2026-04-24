@@ -105,6 +105,21 @@ export function estimatePreTaxDeductions(
   return total;
 }
 
+/**
+ * Hard-rule employer savings formula:
+ * Employer Annual Savings = participatingEmployees × annualPremium × 7.65%
+ * Participation reduces headcount, not the FICA rate.
+ */
+export function calculateEmployerAnnualSavings(
+  employeeCount: number,
+  monthlyPremiumPerEmployee: number,
+  participationRate: number,
+): number {
+  const participatingEmployees = employeeCount * (participationRate / 100);
+  const annualPremium = monthlyPremiumPerEmployee * 12;
+  return Math.round(participatingEmployees * annualPremium * FICA_RATES.combined * 100) / 100;
+}
+
 export function calculateTierResult(
   tierLabel: string,
   employeeCount: number,

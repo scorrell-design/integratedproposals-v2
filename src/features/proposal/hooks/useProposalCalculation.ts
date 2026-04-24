@@ -1,6 +1,7 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { useProposalStore } from '../store/proposal.store';
-import { calculateTierResult, estimatePreTaxDeductions, calculateSavingsRange } from '../engine';
+import { calculateTierResult, estimatePreTaxDeductions, calculateSavingsRange, calculateEmployerAnnualSavings } from '../engine';
+import { FICA_RATES } from '@/config/fica-rates';
 import { ADMIN_FEE_ANNUAL } from '@/config/fica-rates';
 import type { ProposalResult, TierResult } from '../types/proposal.types';
 
@@ -25,8 +26,24 @@ export function useProposalCalculation() {
       percent: s.workforcePercent,
     }));
 
+    const hcEnabled = benefits.enabled && benefits.healthcare.enabled;
+    const hc = benefits.healthcare;
+
+    // --- Employer Annual Savings: hard-rule formula ---
+    // Σ(participating employees × annual premium × 0.0765) per benefit
+    let directEmployerSavings = 0;
+    if (hcEnabled) {
+      const medAvg = (hc.medical.premiums.individual + hc.medical.premiums.family) / 2;
+      const denAvg = (hc.dental.premiums.individual + hc.dental.premiums.family) / 2;
+      const visAvg = (hc.vision.premiums.individual + hc.vision.premiums.family) / 2;
+
+      directEmployerSavings += calculateEmployerAnnualSavings(company.employeeCount, medAvg, hc.medical.participationRate);
+      directEmployerSavings += calculateEmployerAnnualSavings(company.employeeCount, denAvg, hc.dental.participationRate);
+      directEmployerSavings += calculateEmployerAnnualSavings(company.employeeCount, visAvg, hc.vision.participationRate);
+    }
+
+    // --- Tier-level calculations for paycheck comparison ---
     const tierResults: TierResult[] = [];
-    let totalEmployerSavings = 0;
     let totalQualified = 0;
     let totalPositive = 0;
     let totalEmployeeSavings = 0;
@@ -34,9 +51,6 @@ export function useProposalCalculation() {
     for (const tier of tiers) {
       const employeeCount = Math.round(company.employeeCount * (tier.workforcePercent / 100));
       const avgSalary = (tier.salaryMin + tier.salaryMax) / 2;
-
-      const hcEnabled = benefits.enabled && benefits.healthcare.enabled;
-      const hc = benefits.healthcare;
 
       const medAvg = (hc.medical.premiums.individual + hc.medical.premiums.family) / 2;
       const denAvg = (hc.dental.premiums.individual + hc.dental.premiums.family) / 2;
@@ -80,19 +94,33 @@ export function useProposalCalculation() {
         netImpactPerEmployee: result.netImpactPerEmployee,
       });
 
-      totalEmployerSavings += result.totalEmployerSavings;
       totalQualified += result.qualifiedCount;
       totalPositive += result.positiveCount;
       totalEmployeeSavings += result.netImpactPerEmployee * employeeCount;
     }
 
+    const employerAnnualFICASavings = Math.round(directEmployerSavings);
     const totalAdminFee = ADMIN_FEE_ANNUAL * company.employeeCount;
-    const netAnnualBenefit = totalEmployerSavings - totalAdminFee;
+    const netAnnualBenefit = employerAnnualFICASavings - totalAdminFee;
     const avgEmployeeSavings = company.employeeCount > 0 ? totalEmployeeSavings / company.employeeCount : 0;
-    const savingsRange = calculateSavingsRange(totalEmployerSavings, 'quick_proposal');
+    const savingsRange = calculateSavingsRange(employerAnnualFICASavings, 'quick_proposal');
+
+    if (import.meta.env.DEV && hcEnabled) {
+      const medAvg = (hc.medical.premiums.individual + hc.medical.premiums.family) / 2;
+      const denAvg = (hc.dental.premiums.individual + hc.dental.premiums.family) / 2;
+      const visAvg = (hc.vision.premiums.individual + hc.vision.premiums.family) / 2;
+      const expectedSavings =
+        company.employeeCount * (hc.medical.participationRate / 100) * medAvg * 12 * FICA_RATES.combined +
+        company.employeeCount * (hc.dental.participationRate / 100) * denAvg * 12 * FICA_RATES.combined +
+        company.employeeCount * (hc.vision.participationRate / 100) * visAvg * 12 * FICA_RATES.combined;
+      console.assert(
+        Math.abs(employerAnnualFICASavings - Math.round(expectedSavings)) < 2,
+        `KPI mismatch: got ${employerAnnualFICASavings}, expected ~${Math.round(expectedSavings)}`,
+      );
+    }
 
     const proposalResult: ProposalResult = {
-      employerAnnualFICASavings: Math.round(totalEmployerSavings),
+      employerAnnualFICASavings,
       avgEmployeeAnnualSavings: Math.round(avgEmployeeSavings),
       qualifiedEmployees: totalQualified,
       totalEmployees: company.employeeCount,
