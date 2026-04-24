@@ -46,9 +46,10 @@ export function QuickProposalPage({ groupId = 'demo' }: QuickProposalPageProps) 
       enabled: true,
       healthcare: {
         enabled: true,
-        medical: { participationRate: 75, premiums: { individual: 600, family: 1800 } },
-        dental: { participationRate: 75, premiums: { individual: 45, family: 85 } },
-        vision: { participationRate: 75, premiums: { individual: 15, family: 40 } },
+        participationRate: 75,
+        medical: { premiums: { individual: 600, family: 1800 } },
+        dental: { premiums: { individual: 45, family: 85 } },
+        vision: { premiums: { individual: 15, family: 40 } },
       },
       retirement: { enabled: false, participationRate: 60, contributionRates: { entry: 4, mid: 6, senior: 8, executive: 10 } },
       hsa: { enabled: false, participationRate: 30, annualContribution: 1500 },

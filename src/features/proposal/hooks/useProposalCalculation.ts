@@ -30,16 +30,17 @@ export function useProposalCalculation() {
     const hc = benefits.healthcare;
 
     // --- Employer Annual Savings: hard-rule formula ---
-    // Σ(participating employees × annual premium × 0.0765) per benefit
+    // Single healthcare participation rate drives all three sub-benefits
     let directEmployerSavings = 0;
     if (hcEnabled) {
       const medAvg = (hc.medical.premiums.individual + hc.medical.premiums.family) / 2;
       const denAvg = (hc.dental.premiums.individual + hc.dental.premiums.family) / 2;
       const visAvg = (hc.vision.premiums.individual + hc.vision.premiums.family) / 2;
+      const rate = hc.participationRate;
 
-      directEmployerSavings += calculateEmployerAnnualSavings(company.employeeCount, medAvg, hc.medical.participationRate);
-      directEmployerSavings += calculateEmployerAnnualSavings(company.employeeCount, denAvg, hc.dental.participationRate);
-      directEmployerSavings += calculateEmployerAnnualSavings(company.employeeCount, visAvg, hc.vision.participationRate);
+      directEmployerSavings += calculateEmployerAnnualSavings(company.employeeCount, medAvg, rate);
+      directEmployerSavings += calculateEmployerAnnualSavings(company.employeeCount, denAvg, rate);
+      directEmployerSavings += calculateEmployerAnnualSavings(company.employeeCount, visAvg, rate);
     }
 
     // --- Tier-level calculations for paycheck comparison ---
@@ -63,12 +64,13 @@ export function useProposalCalculation() {
         ? benefits.hsa.annualContribution
         : 0;
 
+      const hcRate = hcEnabled ? hc.participationRate : 0;
       const preTaxDeduction = estimatePreTaxDeductions(avgSalary, tier.level, {
-        medicalParticipation: hcEnabled ? hc.medical.participationRate : 0,
+        medicalParticipation: hcRate,
         medicalPremiumAnnual: medAvg * 12,
-        dentalParticipation: hcEnabled ? hc.dental.participationRate : 0,
+        dentalParticipation: hcRate,
         dentalPremiumAnnual: denAvg * 12,
-        visionParticipation: hcEnabled ? hc.vision.participationRate : 0,
+        visionParticipation: hcRate,
         visionPremiumAnnual: visAvg * 12,
         retirementParticipation: benefits.enabled && benefits.retirement.enabled ? benefits.retirement.participationRate : 0,
         retirementRate,
@@ -109,10 +111,11 @@ export function useProposalCalculation() {
       const medAvg = (hc.medical.premiums.individual + hc.medical.premiums.family) / 2;
       const denAvg = (hc.dental.premiums.individual + hc.dental.premiums.family) / 2;
       const visAvg = (hc.vision.premiums.individual + hc.vision.premiums.family) / 2;
+      const r = hc.participationRate / 100;
       const expectedSavings =
-        company.employeeCount * (hc.medical.participationRate / 100) * medAvg * 12 * FICA_RATES.combined +
-        company.employeeCount * (hc.dental.participationRate / 100) * denAvg * 12 * FICA_RATES.combined +
-        company.employeeCount * (hc.vision.participationRate / 100) * visAvg * 12 * FICA_RATES.combined;
+        company.employeeCount * r * medAvg * 12 * FICA_RATES.combined +
+        company.employeeCount * r * denAvg * 12 * FICA_RATES.combined +
+        company.employeeCount * r * visAvg * 12 * FICA_RATES.combined;
       console.assert(
         Math.abs(employerAnnualFICASavings - Math.round(expectedSavings)) < 2,
         `KPI mismatch: got ${employerAnnualFICASavings}, expected ~${Math.round(expectedSavings)}`,

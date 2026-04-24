@@ -51,12 +51,13 @@ export function analyzeEmployees(
       const hsaAnnual = config.benefits.enabled && config.benefits.hsa.enabled
         ? config.benefits.hsa.annualContribution : 0;
 
+      const hcRate = hcEnabled ? hc.participationRate : 0;
       preTaxDeduction = estimatePreTaxDeductions(emp.salary, tierLevel, {
-        medicalParticipation: hcEnabled ? hc.medical.participationRate : 0,
+        medicalParticipation: hcRate,
         medicalPremiumAnnual: medAvg * 12,
-        dentalParticipation: hcEnabled ? hc.dental.participationRate : 0,
+        dentalParticipation: hcRate,
         dentalPremiumAnnual: denAvg * 12,
-        visionParticipation: hcEnabled ? hc.vision.participationRate : 0,
+        visionParticipation: hcRate,
         visionPremiumAnnual: visAvg * 12,
         retirementParticipation: config.benefits.enabled && config.benefits.retirement.enabled ? config.benefits.retirement.participationRate : 0,
         retirementRate,
