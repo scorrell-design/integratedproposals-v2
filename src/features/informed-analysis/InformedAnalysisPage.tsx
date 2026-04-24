@@ -36,6 +36,10 @@ const DEFAULT_BENEFITS: BenefitsConfig = {
 
 const VALID_STATE_CODES = new Set(Object.keys(STATE_TAX_RATES));
 
+const PAY_SCHEDULE_MAP: Record<string, 'weekly' | 'biweekly' | 'semimonthly' | 'monthly'> = {
+  W: 'weekly', BW: 'biweekly', SM: 'semimonthly', M: 'monthly',
+};
+
 function stripBOM(s: string): string {
   return s.replace(/^\uFEFF/, '');
 }
@@ -94,7 +98,7 @@ export function InformedAnalysisPage({ groupId: _groupId = 'demo' }: InformedAna
   const [file, setFile] = useState<File | null>(null);
   const [rawData, setRawData] = useState<Record<string, string>[]>([]);
   const [columns, setColumns] = useState<string[]>([]);
-  const [mapping, setMapping] = useState<ColumnMapping>({ salary: null, filingStatus: null, stateCode: null, employeeName: null, employeeId: null, employmentStatus: null, hireDate: null, dob: null, healthPremium: null, additionalPreTax: null, planTier: null });
+  const [mapping, setMapping] = useState<ColumnMapping>({});
   const [validation, setValidation] = useState<ValidationResult | null>(null);
   const [employees, setEmployees] = useState<ParsedEmployeeRow[]>([]);
   const [result, setResult] = useState<ProposalResult | null>(null);
@@ -104,7 +108,6 @@ export function InformedAnalysisPage({ groupId: _groupId = 'demo' }: InformedAna
   const [showDisclaimer, setShowDisclaimer] = useState(false);
   const [payrollFreq, setPayrollFreq] = useState<'weekly' | 'biweekly' | 'semimonthly' | 'monthly'>('biweekly');
 
-  // Post-upload confirmation state
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [groupName, setGroupName] = useState('');
   const [confirmedFreq, setConfirmedFreq] = useState<'weekly' | 'biweekly' | 'semimonthly' | 'monthly'>('biweekly');
@@ -147,13 +150,15 @@ export function InformedAnalysisPage({ groupId: _groupId = 'demo' }: InformedAna
     return { columns: normCols, data };
   }, []);
 
-  const detectPayrollFrequency = useCallback((data: Record<string, string>[], cols: string[]): 'weekly' | 'biweekly' | 'semimonthly' | 'monthly' => {
-    const freqCol = cols.find((c) => /pay.?freq|pay.?period|pay.?cycle|frequency/i.test(c));
-    if (freqCol) {
-      const sample = (data[0]?.[freqCol] || '').toLowerCase();
-      if (sample.includes('week') && !sample.includes('bi')) return 'weekly';
-      if (sample.includes('semi')) return 'semimonthly';
-      if (sample.includes('month') && !sample.includes('semi')) return 'monthly';
+  const detectPayrollFrequency = useCallback((data: Record<string, string>[], m: ColumnMapping): 'weekly' | 'biweekly' | 'semimonthly' | 'monthly' => {
+    const payCol = m['PaySchedule'];
+    if (payCol) {
+      const sample = (data[0]?.[payCol] || '').toUpperCase().trim();
+      if (sample in PAY_SCHEDULE_MAP) return PAY_SCHEDULE_MAP[sample];
+      const lower = sample.toLowerCase();
+      if (lower.includes('week') && !lower.includes('bi')) return 'weekly';
+      if (lower.includes('semi')) return 'semimonthly';
+      if (lower.includes('month') && !lower.includes('semi')) return 'monthly';
     }
     return 'biweekly';
   }, []);
@@ -167,7 +172,7 @@ export function InformedAnalysisPage({ groupId: _groupId = 'demo' }: InformedAna
     const suggested = detectColumnMapping(cols);
     setMapping(suggested);
     mappingRef.current = suggested;
-    const freq = detectPayrollFrequency(data, cols);
+    const freq = detectPayrollFrequency(data, suggested);
     setPayrollFreq(freq);
     setConfirmedFreq(freq);
     setGroupName(sanitizeFilename(selectedFile.name));
@@ -177,7 +182,7 @@ export function InformedAnalysisPage({ groupId: _groupId = 'demo' }: InformedAna
     setStep('mapping');
   }, [parseFile, detectPayrollFrequency]);
 
-  const handleUpdateMapping = useCallback((field: keyof ColumnMapping, column: string | null) => {
+  const handleUpdateMapping = useCallback((field: string, column: string | null) => {
     const m = { ...mapping, [field]: column };
     setMapping(m);
     mappingRef.current = m;
@@ -197,33 +202,58 @@ export function InformedAnalysisPage({ groupId: _groupId = 'demo' }: InformedAna
   const handleDisclaimerAccept = useCallback(() => {
     setShowDisclaimer(false);
     const currentData = rawDataRef.current;
-    const currentMapping = mappingRef.current;
+    const m = mappingRef.current;
     const periods = payPeriodsPerYear(confirmedFreq);
 
-    const parsed: ParsedEmployeeRow[] = currentData.map((row, i) => {
-      let salary = parseCurrencyValue(currentMapping.salary ? row[currentMapping.salary] : null);
+    const getVal = (row: Record<string, string>, canonical: string) => {
+      const col = m[canonical];
+      return col ? (row[col] ?? '') : '';
+    };
 
-      // Auto-detect per-period salary and annualize
+    const parsed: ParsedEmployeeRow[] = currentData.map((row, i) => {
+      let salary = parseCurrencyValue(getVal(row, 'GrossWagesPPP'));
       if (salary > 0 && salary < 25000) {
         salary = salary * periods;
       }
 
-      // Sum all qualified pre-tax deduction columns (per-period)
-      const healthPP = parseCurrencyValue(currentMapping.healthPremium ? row[currentMapping.healthPremium] : null);
-      const additionalPP = parseCurrencyValue(currentMapping.additionalPreTax ? row[currentMapping.additionalPreTax] : null);
-      const totalPreTaxPP = healthPP + additionalPP;
+      // Sum all qualified per-period pre-tax deduction columns
+      const medPP = parseCurrencyValue(getVal(row, 'EmployeeContMajorMed'));
+      const denPP = parseCurrencyValue(getVal(row, 'EmployeeContDen'));
+      const visPP = parseCurrencyValue(getVal(row, 'EmployeeContVis'));
+      const additionalPP = parseCurrencyValue(getVal(row, 'AdditionalPreTaxDedPP'));
+      const k401PP = parseCurrencyValue(getVal(row, '401KCont'));
+      const rothPP = parseCurrencyValue(getVal(row, 'RothCont'));
+      const retDeferPP = parseCurrencyValue(getVal(row, 'RetirementDeferral'));
+      const k401CatchPP = parseCurrencyValue(getVal(row, '401KCatchupCont'));
+      const rothCatchPP = parseCurrencyValue(getVal(row, 'RothCatchupCont'));
+      const totalPreTaxPP = medPP + denPP + visPP + additionalPP + k401PP + rothPP + retDeferPP + k401CatchPP + rothCatchPP;
+
+      const firstName = getVal(row, 'FirstName').trim();
+      const lastName = getVal(row, 'LastName').trim();
+      const empName = [firstName, lastName].filter(Boolean).join(' ') || `Employee ${i + 1}`;
+
+      const empId = getVal(row, 'EmployeeID').trim() || String(i + 1);
+
+      const residenceState = normalizeStateCode(getVal(row, 'State') || 'TX');
+      const workedInState = getVal(row, 'WorkedInState').trim();
+      const stateForCalc = workedInState ? normalizeStateCode(workedInState) : residenceState;
+
+      const fedMarital = getVal(row, 'FedMaritalStatus');
+      const filingStatus = normalizeFilingStatus(fedMarital);
+
+      // Plan tier (pass through raw value for plan tier breakdown)
+      const planTierRaw = getVal(row, 'planTier') || getVal(row, 'PlanTier');
+      const planTier = planTierRaw ? planTierRaw.trim() || undefined : undefined;
 
       return {
-        employeeId: currentMapping.employeeId ? (row[currentMapping.employeeId] || String(i + 1)) : String(i + 1),
-        name: currentMapping.employeeName ? (row[currentMapping.employeeName] || `Employee ${i + 1}`) : `Employee ${i + 1}`,
+        employeeId: empId,
+        name: empName,
         salary,
-        filingStatus: currentMapping.filingStatus ? normalizeFilingStatus(row[currentMapping.filingStatus]) : 'single',
-        stateCode: currentMapping.stateCode ? normalizeStateCode(row[currentMapping.stateCode] || 'TX') : 'TX',
-        employmentStatus: currentMapping.employmentStatus ? (row[currentMapping.employmentStatus]?.toLowerCase().includes('part') ? 'part_time' as const : 'full_time' as const) : 'full_time' as const,
-        hireDate: currentMapping.hireDate ? row[currentMapping.hireDate] : undefined,
-        dob: currentMapping.dob ? row[currentMapping.dob] : undefined,
+        filingStatus,
+        stateCode: stateForCalc,
+        employmentStatus: 'full_time' as const,
         preTaxPerPeriod: totalPreTaxPP > 0 ? totalPreTaxPP : undefined,
-        planTier: currentMapping.planTier ? (row[currentMapping.planTier] || '').trim() || undefined : undefined,
+        planTier,
       };
     }).filter((emp) => emp.salary > 0);
 

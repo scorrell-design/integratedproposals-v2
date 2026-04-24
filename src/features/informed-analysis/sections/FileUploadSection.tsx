@@ -51,19 +51,27 @@ export function FileUploadSection({ onFileSelected, currentFile }: FileUploadSec
         )}
       </div>
 
-      <div className="mt-4">
+      <div className="mt-4 flex flex-wrap items-center gap-4">
         <a
-          href="/samples/sample-census-150.csv"
+          href="/samples/proposal_upload_template.csv"
           download
           className="inline-flex items-center gap-1.5 text-[13px] font-medium text-text-primary hover:underline transition-colors"
         >
           <Download size={14} />
-          Download sample file
+          Download Template
         </a>
-        <p className="text-[11px] text-text-tertiary mt-1">
-          Hypothetical 150-employee group for demos and testing.
-        </p>
+        <a
+          href="/samples/proposal_upload_sample_160employees.csv"
+          download
+          className="inline-flex items-center gap-1.5 text-[13px] font-medium text-accent hover:underline transition-colors"
+        >
+          <Download size={14} />
+          Download Sample with Data
+        </a>
       </div>
+      <p className="text-[11px] text-text-tertiary mt-1.5">
+        Template has 35 canonical columns. Sample contains 160 hypothetical employees for demos and testing.
+      </p>
     </SectionCard>
   );
 }
