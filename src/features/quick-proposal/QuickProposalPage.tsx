@@ -122,9 +122,6 @@ export function QuickProposalPage({ groupId = 'demo' }: QuickProposalPageProps) 
               <Sparkles size={14} style={{ color: 'var(--color-synrgy-teal)' }} />
               Use Hypothetical Example
             </button>
-            <p className="text-[11px] text-text-tertiary mt-1 text-right">
-              For demos, always use hypothetical data — never a real group's figures.
-            </p>
           </div>
         </div>
 
