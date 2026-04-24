@@ -80,13 +80,13 @@ export function EmployerImpactBreakdown({ result, payPeriodsPerYear, midTier }: 
                 </p>
               </div>
               <p className="font-mono text-[18px] font-bold text-accent">
-                +{formatDollarCents(midTier.perPaycheckIncrease)}/paycheck
+                {midTier.perPaycheckIncrease >= 0 ? '+' : ''}{formatDollarCents(midTier.perPaycheckIncrease)}/paycheck
               </p>
               <p className="mt-1 font-mono text-[14px] text-success">
-                +{formatDollarCents(midTier.annualIncrease)}/year
+                {midTier.annualIncrease >= 0 ? '+' : ''}{formatDollarCents(midTier.annualIncrease)}/year
               </p>
               <p className="mt-2 text-[12px] text-text-tertiary">
-                ${Math.round(midTier.grossPay * payPeriodsPerYear).toLocaleString()} salary · {midTier.tier}
+                {formatDollar(Math.round(midTier.grossPay * payPeriodsPerYear))} salary · {midTier.tier}
               </p>
             </>
           ) : (

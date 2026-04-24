@@ -8,7 +8,8 @@ interface PlainLanguageSummaryProps {
 }
 
 export function PlainLanguageSummary({ companyName, result, stateCodes }: PlainLanguageSummaryProps) {
-  const stateList = [...new Set(stateCodes)].slice(0, 5).map((c) => c.toUpperCase()).join(', ');
+  const validCodes = [...new Set(stateCodes)].filter((c) => /^[A-Z]{2}$/i.test(c));
+  const stateList = validCodes.slice(0, 3).map((c) => c.toUpperCase()).join(', ');
   const monthlySavings = result.employerAnnualFICASavings / 12;
 
   return (

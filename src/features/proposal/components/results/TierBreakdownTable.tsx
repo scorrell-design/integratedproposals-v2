@@ -36,7 +36,7 @@ export function TierBreakdownTable({ tiers, payPeriodsPerYear = 26, totalEmploye
       {/* Rows */}
       {tiers.map((tier, i) => {
         const pct = total > 0 ? Math.round((tier.employeeCount / total) * 100) : 0;
-        const annualImpact = tier.ficaSavingsPerEmployee;
+        const annualImpact = tier.netImpactPerEmployee;
         const paycheckIncrease = annualImpact / payPeriodsPerYear;
 
         return (

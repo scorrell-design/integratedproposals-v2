@@ -19,6 +19,8 @@ const FIELD_LABELS: Record<keyof ColumnMapping, { label: string; required: boole
   employmentStatus: { label: 'Employment Status', required: false },
   hireDate: { label: 'Hire Date', required: false },
   dob: { label: 'Date of Birth', required: false },
+  healthPremium: { label: 'Health Insurance Premium (per period)', required: false },
+  additionalPreTax: { label: 'Additional Pre-Tax Deductions (per period)', required: false },
 };
 
 export function ColumnMappingSection({ columns, mapping, validation, onUpdateMapping, onConfirm }: ColumnMappingSectionProps) {

@@ -93,6 +93,7 @@ export interface ParsedEmployeeRow {
   employmentStatus: 'full_time' | 'part_time';
   hireDate?: string;
   dob?: string;
+  preTaxPerPeriod?: number;
 }
 
 export interface ProposalResult {

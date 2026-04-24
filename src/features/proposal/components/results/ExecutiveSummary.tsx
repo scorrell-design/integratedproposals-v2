@@ -38,8 +38,8 @@ export function ExecutiveSummary({ result, payPeriodsPerYear }: ExecutiveSummary
             label="meet program eligibility"
           />
           <KPICell
-            value={`+${formatDollar(avgEmployeeAnnual)}/year`}
-            label={`+${formatDollarCents(avgPerPaycheck)}/paycheck`}
+            value={`${avgEmployeeAnnual >= 0 ? '+' : ''}${formatDollar(avgEmployeeAnnual)}/year`}
+            label={`${avgPerPaycheck >= 0 ? '+' : ''}${formatDollarCents(avgPerPaycheck)}/paycheck`}
             valueColor="text-success"
           />
         </div>

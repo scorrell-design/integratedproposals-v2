@@ -40,7 +40,7 @@ export function PaycheckComparison({ tiers, payrollFrequency }: PaycheckComparis
                   ? 'bg-white text-text-primary shadow-sm'
                   : 'text-text-tertiary hover:text-text-secondary'}`}
             >
-              {t.tier}: <span className="font-mono text-accent">+{formatDollarCents(t.perPaycheckIncrease)}</span>
+              {t.tier}: <span className="font-mono text-accent">{t.perPaycheckIncrease >= 0 ? '+' : ''}{formatDollarCents(t.perPaycheckIncrease)}</span>
             </button>
           ))}
         </div>
@@ -96,7 +96,7 @@ export function PaycheckComparison({ tiers, payrollFrequency }: PaycheckComparis
           style={{ boxShadow: '0 0 24px rgba(0, 95, 120, 0.08)' }}
         >
           <p className="font-mono text-[22px] font-bold text-accent">
-            +{formatDollarCents(tier.perPaycheckIncrease)} per paycheck
+            {tier.perPaycheckIncrease >= 0 ? '+' : ''}{formatDollarCents(tier.perPaycheckIncrease)} per paycheck
           </p>
           <p className="mt-0.5 text-[13px] text-text-secondary">additional take-home pay</p>
           <p className="mt-0.5 text-[12px] text-text-tertiary">
@@ -118,7 +118,7 @@ export function PaycheckComparison({ tiers, payrollFrequency }: PaycheckComparis
             <p className="text-[11px] text-text-tertiary">Total Tax Savings</p>
           </div>
           <div>
-            <p className="font-mono text-[20px] font-bold text-accent">+{pctIncrease}%</p>
+            <p className="font-mono text-[20px] font-bold text-accent">{parseFloat(pctIncrease) >= 0 ? '+' : ''}{pctIncrease}%</p>
             <p className="text-[11px] text-text-tertiary">Increase Percentage</p>
           </div>
         </div>

@@ -5,7 +5,6 @@ import { ProposalHeaderBand } from '@/features/proposal/components/results/Propo
 import { ExecutiveSummary } from '@/features/proposal/components/results/ExecutiveSummary';
 import { PlainLanguageSummary } from '@/features/proposal/components/results/PlainLanguageSummary';
 import { EmployerImpactBreakdown } from '@/features/proposal/components/results/EmployerImpactBreakdown';
-import { SavingsSpectrum } from '@/features/proposal/components/results/SavingsSpectrum';
 import { EmployeeLookup } from '../components/EmployeeLookup';
 import { TierBreakdownTable } from '@/features/proposal/components/results/TierBreakdownTable';
 import { SavingsFlowDiagram } from '@/features/proposal/components/results/SavingsFlowDiagram';
@@ -63,11 +62,13 @@ export function IAResultsSection({
   const freq = payrollFrequency as 'weekly' | 'biweekly' | 'semimonthly' | 'monthly';
   const periods = payPeriodsPerYear(freq);
 
-  const avgPreTax = result.tierResults.length > 0
-    ? result.tierResults.reduce((s: number, t) => s + t.avgPreTaxDeduction * t.employeeCount, 0) / result.totalEmployees
-    : 0;
+  const totalPreTaxDeductions = employeeResults.reduce((s, r) => s + r.preTaxDeduction, 0);
   const usedStateCodes = [...new Set(employees.map((e) => e.stateCode))];
-  const midTier = paycheckComparisons.length >= 2 ? paycheckComparisons[Math.floor(paycheckComparisons.length / 2)] : paycheckComparisons[0];
+  // Pick a positively-impacted mid-tier for the example; fall back to any mid-tier
+  const positiveTiers = paycheckComparisons.filter((t) => t.perPaycheckIncrease > 0);
+  const midTier = positiveTiers.length >= 2
+    ? positiveTiers[Math.floor(positiveTiers.length / 2)]
+    : positiveTiers[0] ?? (paycheckComparisons.length >= 2 ? paycheckComparisons[Math.floor(paycheckComparisons.length / 2)] : paycheckComparisons[0]);
 
   const payCycleLabel = freq === 'weekly' ? 'Weekly' : freq === 'biweekly' ? 'Bi-weekly' : freq === 'semimonthly' ? 'Semi-monthly' : 'Monthly';
 
@@ -92,13 +93,12 @@ export function IAResultsSection({
         <ExecutiveSummary result={result} payPeriodsPerYear={periods} />
         <PlainLanguageSummary companyName={companyName} result={result} stateCodes={usedStateCodes} />
         <EmployerImpactBreakdown result={result} payPeriodsPerYear={periods} midTier={midTier} />
-        <SavingsSpectrum range={result.savingsRange} proposalType="informed_analysis" />
         {employees.length > 0 && (
           <EmployeeLookup employees={employees} employeeResults={employeeResults} payPeriodsPerYear={periods} />
         )}
         <TierBreakdownTable tiers={result.tierResults} payPeriodsPerYear={periods} totalEmployees={result.totalEmployees} />
         <SavingsFlowDiagram
-          totalPreTaxDeductions={Math.round(avgPreTax * result.totalEmployees)}
+          totalPreTaxDeductions={Math.round(totalPreTaxDeductions)}
           totalFICASavings={Math.round(result.employerAnnualFICASavings)}
         />
         <ImplementationTimeline />

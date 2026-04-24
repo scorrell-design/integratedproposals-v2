@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { BarChart3, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Papa from 'papaparse';
@@ -15,9 +15,11 @@ import { detectColumnMapping, validateFile, type ColumnMapping, type ValidationR
 import { RecognizedFieldsView } from './components/RecognizedFieldsView';
 import { analyzeEmployees, type EmployeeResult } from './engine/mini-analyzer';
 import { useInformedPDFGeneration } from '@/features/proposal/hooks/useInformedPDFGeneration';
+import { payPeriodsPerYear } from '@/utils/format';
+import { STATE_TAX_RATES } from '@/config/tax-rates';
 import type { ParsedEmployeeRow, ProposalResult, PaycheckComparison, BenefitsConfig } from '@/features/proposal/types/proposal.types';
 
-type Step = 'upload' | 'mapping' | 'review' | 'results';
+type Step = 'upload' | 'mapping' | 'confirm' | 'review' | 'results';
 
 const DEFAULT_BENEFITS: BenefitsConfig = {
   enabled: false,
@@ -30,6 +32,8 @@ const DEFAULT_BENEFITS: BenefitsConfig = {
   retirement: { enabled: false, participationRate: 60, contributionRates: { entry: 4, mid: 6, senior: 8, executive: 10 } },
   hsa: { enabled: false, participationRate: 30, annualContribution: 1500 },
 };
+
+const VALID_STATE_CODES = new Set(Object.keys(STATE_TAX_RATES));
 
 function stripBOM(s: string): string {
   return s.replace(/^\uFEFF/, '');
@@ -51,7 +55,7 @@ function normalizeDataRow(row: Record<string, string>, originalCols: string[], n
   return normalized;
 }
 
-function parseSalaryValue(raw: string | null | undefined): number {
+function parseCurrencyValue(raw: string | null | undefined): number {
   if (raw == null) return 0;
   const cleaned = String(raw).replace(/[,$\s]/g, '').replace(/^\((.+)\)$/, '-$1');
   const val = parseFloat(cleaned);
@@ -65,6 +69,20 @@ function normalizeFilingStatus(val: string): 'single' | 'married' | 'hoh' {
   return 'single';
 }
 
+function normalizeStateCode(raw: string): string {
+  const code = raw.toUpperCase().trim().substring(0, 2);
+  return VALID_STATE_CODES.has(code) ? code : 'TX';
+}
+
+function sanitizeFilename(name: string): string {
+  return name
+    .replace(/\.[^.]+$/, '')
+    .replace(/[_-]+/g, ' ')
+    .replace(/\b(sample|demo|v\d+|test)\b/gi, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim() || 'Company';
+}
+
 interface InformedAnalysisPageProps {
   groupId?: string;
 }
@@ -75,7 +93,7 @@ export function InformedAnalysisPage({ groupId: _groupId = 'demo' }: InformedAna
   const [file, setFile] = useState<File | null>(null);
   const [rawData, setRawData] = useState<Record<string, string>[]>([]);
   const [columns, setColumns] = useState<string[]>([]);
-  const [mapping, setMapping] = useState<ColumnMapping>({ salary: null, filingStatus: null, stateCode: null, employeeName: null, employeeId: null, employmentStatus: null, hireDate: null, dob: null });
+  const [mapping, setMapping] = useState<ColumnMapping>({ salary: null, filingStatus: null, stateCode: null, employeeName: null, employeeId: null, employmentStatus: null, hireDate: null, dob: null, healthPremium: null, additionalPreTax: null });
   const [validation, setValidation] = useState<ValidationResult | null>(null);
   const [employees, setEmployees] = useState<ParsedEmployeeRow[]>([]);
   const [result, setResult] = useState<ProposalResult | null>(null);
@@ -85,11 +103,15 @@ export function InformedAnalysisPage({ groupId: _groupId = 'demo' }: InformedAna
   const [showDisclaimer, setShowDisclaimer] = useState(false);
   const [payrollFreq, setPayrollFreq] = useState<'weekly' | 'biweekly' | 'semimonthly' | 'monthly'>('biweekly');
 
+  // Post-upload confirmation state
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [groupName, setGroupName] = useState('');
+  const [confirmedFreq, setConfirmedFreq] = useState<'weekly' | 'biweekly' | 'semimonthly' | 'monthly'>('biweekly');
+
   const { downloadPDF: downloadInformedPDF, isGenerating: isGeneratingPDF } = useInformedPDFGeneration();
 
   const rawDataRef = useRef<Record<string, string>[]>([]);
   const mappingRef = useRef<ColumnMapping>(mapping);
-  const payrollFreqRef = useRef(payrollFreq);
 
   const parseFile = useCallback(async (f: File) => {
     const ext = f.name.split('.').pop()?.toLowerCase();
@@ -146,7 +168,8 @@ export function InformedAnalysisPage({ groupId: _groupId = 'demo' }: InformedAna
     mappingRef.current = suggested;
     const freq = detectPayrollFrequency(data, cols);
     setPayrollFreq(freq);
-    payrollFreqRef.current = freq;
+    setConfirmedFreq(freq);
+    setGroupName(sanitizeFilename(selectedFile.name));
     const v = validateFile(cols, data, suggested);
     setValidation(v);
     setRecognizedFields(v.recognizedFields);
@@ -161,41 +184,62 @@ export function InformedAnalysisPage({ groupId: _groupId = 'demo' }: InformedAna
   }, [mapping, columns, rawData]);
 
   const handleConfirmMapping = useCallback(() => {
-    setShowDisclaimer(true);
+    setShowConfirmModal(true);
   }, []);
+
+  const handleConfirmGroupAndProceed = useCallback(() => {
+    setShowConfirmModal(false);
+    setPayrollFreq(confirmedFreq);
+    setShowDisclaimer(true);
+  }, [confirmedFreq]);
 
   const handleDisclaimerAccept = useCallback(() => {
     setShowDisclaimer(false);
     const currentData = rawDataRef.current;
     const currentMapping = mappingRef.current;
-    const currentFreq = payrollFreqRef.current;
+    const periods = payPeriodsPerYear(confirmedFreq);
 
-    const parsed: ParsedEmployeeRow[] = currentData.map((row, i) => ({
-      employeeId: currentMapping.employeeId ? (row[currentMapping.employeeId] || String(i + 1)) : String(i + 1),
-      name: currentMapping.employeeName ? (row[currentMapping.employeeName] || `Employee ${i + 1}`) : `Employee ${i + 1}`,
-      salary: parseSalaryValue(currentMapping.salary ? row[currentMapping.salary] : null),
-      filingStatus: currentMapping.filingStatus ? normalizeFilingStatus(row[currentMapping.filingStatus]) : 'single',
-      stateCode: currentMapping.stateCode ? (row[currentMapping.stateCode] || 'TX').toUpperCase().trim().substring(0, 2) : 'TX',
-      employmentStatus: currentMapping.employmentStatus ? (row[currentMapping.employmentStatus]?.toLowerCase().includes('part') ? 'part_time' as const : 'full_time' as const) : 'full_time' as const,
-      hireDate: currentMapping.hireDate ? row[currentMapping.hireDate] : undefined,
-      dob: currentMapping.dob ? row[currentMapping.dob] : undefined,
-    })).filter((emp) => emp.salary > 0);
+    const parsed: ParsedEmployeeRow[] = currentData.map((row, i) => {
+      let salary = parseCurrencyValue(currentMapping.salary ? row[currentMapping.salary] : null);
+
+      // Auto-detect per-period salary and annualize
+      if (salary > 0 && salary < 25000) {
+        salary = salary * periods;
+      }
+
+      // Sum all qualified pre-tax deduction columns (per-period)
+      const healthPP = parseCurrencyValue(currentMapping.healthPremium ? row[currentMapping.healthPremium] : null);
+      const additionalPP = parseCurrencyValue(currentMapping.additionalPreTax ? row[currentMapping.additionalPreTax] : null);
+      const totalPreTaxPP = healthPP + additionalPP;
+
+      return {
+        employeeId: currentMapping.employeeId ? (row[currentMapping.employeeId] || String(i + 1)) : String(i + 1),
+        name: currentMapping.employeeName ? (row[currentMapping.employeeName] || `Employee ${i + 1}`) : `Employee ${i + 1}`,
+        salary,
+        filingStatus: currentMapping.filingStatus ? normalizeFilingStatus(row[currentMapping.filingStatus]) : 'single',
+        stateCode: currentMapping.stateCode ? normalizeStateCode(row[currentMapping.stateCode] || 'TX') : 'TX',
+        employmentStatus: currentMapping.employmentStatus ? (row[currentMapping.employmentStatus]?.toLowerCase().includes('part') ? 'part_time' as const : 'full_time' as const) : 'full_time' as const,
+        hireDate: currentMapping.hireDate ? row[currentMapping.hireDate] : undefined,
+        dob: currentMapping.dob ? row[currentMapping.dob] : undefined,
+        preTaxPerPeriod: totalPreTaxPP > 0 ? totalPreTaxPP : undefined,
+      };
+    }).filter((emp) => emp.salary > 0);
 
     setEmployees(parsed);
-    const { result: r, paycheckComparisons: c, employeeResults: er } = analyzeEmployees(parsed, { benefits: DEFAULT_BENEFITS, payrollFrequency: currentFreq });
+    const { result: r, paycheckComparisons: c, employeeResults: er } = analyzeEmployees(parsed, { benefits: DEFAULT_BENEFITS, payrollFrequency: confirmedFreq });
     setResult(r);
     setPaycheckComparisons(c);
     setEmployeeResults(er);
     setStep('results');
     setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
-  }, []);
+  }, [confirmedFreq]);
 
   const handleDisclaimerBack = useCallback(() => {
     setShowDisclaimer(false);
   }, []);
 
   const handleReset = useCallback(() => {
-    setStep('upload'); setFile(null); setRawData([]); setColumns([]); setResult(null); setEmployees([]); setPaycheckComparisons([]); setEmployeeResults([]); setRecognizedFields([]); setShowDisclaimer(false);
+    setStep('upload'); setFile(null); setRawData([]); setColumns([]); setResult(null); setEmployees([]); setPaycheckComparisons([]); setEmployeeResults([]); setRecognizedFields([]); setShowDisclaimer(false); setShowConfirmModal(false); setGroupName('');
     rawDataRef.current = []; mappingRef.current = mapping;
   }, []);
 
@@ -239,8 +283,109 @@ export function InformedAnalysisPage({ groupId: _groupId = 'demo' }: InformedAna
         )}
         {step === 'mapping' && validation && <ColumnMappingSection columns={columns} mapping={mapping} validation={validation} onUpdateMapping={handleUpdateMapping} onConfirm={handleConfirmMapping} />}
         {step === 'review' && <ValidationReviewSection employees={employees} />}
-        {step === 'results' && result && <IAResultsSection result={result} paycheckComparisons={paycheckComparisons} companyName={file?.name.replace(/\.[^.]+$/, '') ?? 'Company'} payrollFrequency={payrollFreq} employees={employees} employeeResults={employeeResults} onDownloadPDF={() => downloadInformedPDF({ groupName: file?.name.replace(/\.[^.]+$/, '') ?? 'Company', result, employeeResults, payrollFrequency: payrollFreq })} onSaveDraft={() => {}} onReset={handleReset} isGeneratingPDF={isGeneratingPDF} isSaving={false} />}
+        {step === 'results' && result && <IAResultsSection result={result} paycheckComparisons={paycheckComparisons} companyName={groupName || 'Company'} payrollFrequency={confirmedFreq} employees={employees} employeeResults={employeeResults} onDownloadPDF={() => downloadInformedPDF({ groupName: groupName || 'Company', result, employeeResults, payrollFrequency: confirmedFreq })} onSaveDraft={() => {}} onReset={handleReset} isGeneratingPDF={isGeneratingPDF} isSaving={false} />}
       </div>
+
+      {/* Group Name + Pay Frequency Confirmation Modal */}
+      <AnimatePresence>
+        {showConfirmModal && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[80]"
+              style={{ background: 'rgba(0, 0, 0, 0.5)' }}
+            />
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.97 }}
+              transition={{ duration: 0.25 }}
+              className="fixed inset-0 z-[90] flex items-center justify-center p-4"
+            >
+              <div
+                className="w-full"
+                style={{
+                  maxWidth: 480,
+                  background: '#FFFFFF',
+                  border: '1px solid #D9CFC0',
+                  borderRadius: 22,
+                  padding: 32,
+                  boxShadow: '0 16px 48px rgba(26, 58, 66, 0.15)',
+                }}
+              >
+                <h2 className="text-[20px] font-semibold text-text-primary">
+                  Confirm Group Details
+                </h2>
+                <p className="text-[14px] text-text-secondary" style={{ marginTop: 8 }}>
+                  Verify these details before generating the proposal.
+                </p>
+
+                <div style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 20 }}>
+                  <div>
+                    <label className="text-[12px] font-semibold text-text-secondary uppercase tracking-[0.05em]">
+                      Group / Company Name
+                    </label>
+                    <input
+                      value={groupName}
+                      onChange={(e) => setGroupName(e.target.value)}
+                      className="glass-input mt-2 w-full py-2.5 px-3 text-[14px]"
+                      placeholder="Enter company name"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-[12px] font-semibold text-text-secondary uppercase tracking-[0.05em]">
+                      Confirm Pay Frequency
+                    </label>
+                    <select
+                      value={confirmedFreq}
+                      onChange={(e) => setConfirmedFreq(e.target.value as typeof confirmedFreq)}
+                      className="glass-input mt-2 w-full py-2.5 px-3 text-[14px] appearance-none"
+                      style={{ background: '#FFFFFF' }}
+                    >
+                      <option value="weekly">Weekly (52 pay periods)</option>
+                      <option value="biweekly">Bi-Weekly (26 pay periods)</option>
+                      <option value="semimonthly">Semi-Monthly (24 pay periods)</option>
+                      <option value="monthly">Monthly (12 pay periods)</option>
+                    </select>
+                    <p className="text-[11px] text-text-tertiary mt-1.5">
+                      Pay frequency drives all annualized calculations. Verify this matches the uploaded payroll data.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-col items-center" style={{ marginTop: 28, gap: 12 }}>
+                  <button
+                    onClick={handleConfirmGroupAndProceed}
+                    disabled={!groupName.trim()}
+                    className="w-full transition-all"
+                    style={{
+                      background: groupName.trim() ? '#C95A38' : 'rgba(201, 90, 56, 0.3)',
+                      color: '#FFFFFF',
+                      borderRadius: 24,
+                      padding: '14px 24px',
+                      fontSize: 16,
+                      fontWeight: 600,
+                      border: 'none',
+                      cursor: groupName.trim() ? 'pointer' : 'not-allowed',
+                      opacity: groupName.trim() ? 1 : 0.4,
+                    }}
+                  >
+                    Confirm &amp; Continue
+                  </button>
+                  <button
+                    onClick={() => setShowConfirmModal(false)}
+                    className="text-[14px] text-text-tertiary hover:text-text-secondary hover:underline transition-colors"
+                  >
+                    Go Back
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
       <DisclaimerModal
         open={showDisclaimer}
         onAccept={handleDisclaimerAccept}

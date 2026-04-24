@@ -7,6 +7,8 @@ export interface ColumnMapping {
   employmentStatus: string | null;
   hireDate: string | null;
   dob: string | null;
+  healthPremium: string | null;
+  additionalPreTax: string | null;
 }
 
 export interface RecognizedField {
@@ -47,7 +49,8 @@ const PAY_FREQ_PATTERNS = /pay.?freq|pay.?period|pay.?cycle|frequency/i;
 const HOURS_PATTERNS = /hours|hours.?worked|regular.?hours/i;
 const OVERTIME_PATTERNS = /overtime|ot.?pay|ot.?hours/i;
 const BONUS_PATTERNS = /bonus|commission/i;
-const HEALTH_PREMIUM_PATTERNS = /health.?ins|medical.?prem|health.?premium|insurance.?ded/i;
+const HEALTH_PREMIUM_PATTERNS = /health.?ins|medical.?prem|health.?premium|insurance.?ded|employee.?contribution.*medical|major.?medical|ee.?medical/i;
+const ADDITIONAL_PRETAX_PATTERNS = /additional.?pre.?tax|pre.?tax.?ded|other.?pre.?tax|supplemental.?pre.?tax|vol.*pre.?tax/i;
 const RETIREMENT_PATTERNS = /401k|401\(k\)|retirement|pension|403b/i;
 
 function matchColumn(columns: string[], pattern: RegExp): string | null {
@@ -66,6 +69,8 @@ export function detectColumnMapping(columns: string[]): ColumnMapping {
     employmentStatus: matchColumn(columns, STATUS_PATTERNS),
     hireDate: matchColumn(columns, HIRE_DATE_PATTERNS),
     dob: matchColumn(columns, DOB_PATTERNS),
+    healthPremium: matchColumn(columns, HEALTH_PREMIUM_PATTERNS),
+    additionalPreTax: matchColumn(columns, ADDITIONAL_PRETAX_PATTERNS),
   };
 }
 

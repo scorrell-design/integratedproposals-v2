@@ -1,11 +1,10 @@
-import { calculateEmployeeFICA, calculateSavingsRange, estimatePreTaxDeductions, calculateEmployerAnnualSavings } from '@/features/proposal/engine';
-import { ADMIN_FEE_ANNUAL } from '@/config/fica-rates';
+import { calculateEmployeeFICA, estimatePreTaxDeductions } from '@/features/proposal/engine';
+import { ADMIN_FEE_ANNUAL, FICA_RATES } from '@/config/fica-rates';
 import type { ParsedEmployeeRow, ProposalResult, TierResult, PaycheckComparison } from '@/features/proposal/types/proposal.types';
 import type { BenefitsConfig } from '@/features/proposal/types/proposal.types';
 import { payPeriodsPerYear } from '@/utils/format';
 import { getFederalMarginalRate } from '@/features/proposal/engine';
 import { STATE_TAX_RATES } from '@/config/tax-rates';
-import { FICA_RATES } from '@/config/fica-rates';
 
 interface AnalyzerConfig {
   benefits: BenefitsConfig;
@@ -33,33 +32,38 @@ export function analyzeEmployees(
   employees: ParsedEmployeeRow[],
   config: AnalyzerConfig,
 ): { result: ProposalResult; employeeResults: EmployeeResult[]; paycheckComparisons: PaycheckComparison[] } {
+  const periods = payPeriodsPerYear(config.payrollFrequency);
+
   const employeeResults: EmployeeResult[] = employees.map((emp) => {
     const tierLevel = getTierLevel(emp.salary);
 
-    const hcEnabled = config.benefits.enabled && config.benefits.healthcare.enabled;
-    const hc = config.benefits.healthcare;
+    // Use actual per-period pre-tax data from file when available
+    let preTaxDeduction: number;
+    if (emp.preTaxPerPeriod != null && emp.preTaxPerPeriod > 0) {
+      preTaxDeduction = emp.preTaxPerPeriod * periods;
+    } else {
+      const hcEnabled = config.benefits.enabled && config.benefits.healthcare.enabled;
+      const hc = config.benefits.healthcare;
+      const medAvg = (hc.medical.premiums.individual + hc.medical.premiums.family) / 2;
+      const denAvg = (hc.dental.premiums.individual + hc.dental.premiums.family) / 2;
+      const visAvg = (hc.vision.premiums.individual + hc.vision.premiums.family) / 2;
+      const retirementRate = config.benefits.enabled && config.benefits.retirement.enabled ? 6 : 0;
+      const hsaAnnual = config.benefits.enabled && config.benefits.hsa.enabled
+        ? config.benefits.hsa.annualContribution : 0;
 
-    const medAvg = (hc.medical.premiums.individual + hc.medical.premiums.family) / 2;
-    const denAvg = (hc.dental.premiums.individual + hc.dental.premiums.family) / 2;
-    const visAvg = (hc.vision.premiums.individual + hc.vision.premiums.family) / 2;
-
-    const retirementRate = config.benefits.enabled && config.benefits.retirement.enabled ? 6 : 0;
-    const hsaAnnual = config.benefits.enabled && config.benefits.hsa.enabled
-      ? config.benefits.hsa.annualContribution
-      : 0;
-
-    const preTaxDeduction = estimatePreTaxDeductions(emp.salary, tierLevel, {
-      medicalParticipation: hcEnabled ? hc.medical.participationRate : 0,
-      medicalPremiumAnnual: medAvg * 12,
-      dentalParticipation: hcEnabled ? hc.dental.participationRate : 0,
-      dentalPremiumAnnual: denAvg * 12,
-      visionParticipation: hcEnabled ? hc.vision.participationRate : 0,
-      visionPremiumAnnual: visAvg * 12,
-      retirementParticipation: config.benefits.enabled && config.benefits.retirement.enabled ? config.benefits.retirement.participationRate : 0,
-      retirementRate,
-      hsaParticipation: config.benefits.enabled && config.benefits.hsa.enabled ? config.benefits.hsa.participationRate : 0,
-      hsaAnnual,
-    });
+      preTaxDeduction = estimatePreTaxDeductions(emp.salary, tierLevel, {
+        medicalParticipation: hcEnabled ? hc.medical.participationRate : 0,
+        medicalPremiumAnnual: medAvg * 12,
+        dentalParticipation: hcEnabled ? hc.dental.participationRate : 0,
+        dentalPremiumAnnual: denAvg * 12,
+        visionParticipation: hcEnabled ? hc.vision.participationRate : 0,
+        visionPremiumAnnual: visAvg * 12,
+        retirementParticipation: config.benefits.enabled && config.benefits.retirement.enabled ? config.benefits.retirement.participationRate : 0,
+        retirementRate,
+        hsaParticipation: config.benefits.enabled && config.benefits.hsa.enabled ? config.benefits.hsa.participationRate : 0,
+        hsaAnnual,
+      });
+    }
 
     const result = calculateEmployeeFICA({
       salary: emp.salary,
@@ -80,23 +84,12 @@ export function analyzeEmployees(
     };
   });
 
-  // --- Employer Annual Savings: hard-rule formula ---
-  const hcEnabled = config.benefits.enabled && config.benefits.healthcare.enabled;
-  const hc = config.benefits.healthcare;
-  let directEmployerSavings = 0;
-  if (hcEnabled) {
-    const medAvg = (hc.medical.premiums.individual + hc.medical.premiums.family) / 2;
-    const denAvg = (hc.dental.premiums.individual + hc.dental.premiums.family) / 2;
-    const visAvg = (hc.vision.premiums.individual + hc.vision.premiums.family) / 2;
+  // Employer savings = Σ(per-employee annual pre-tax deductions) × 0.0765
+  const totalAnnualPreTax = employeeResults.reduce((s, r) => s + r.preTaxDeduction, 0);
+  const totalEmployerSavings = Math.round(totalAnnualPreTax * FICA_RATES.combined);
 
-    directEmployerSavings += calculateEmployerAnnualSavings(employees.length, medAvg, hc.medical.participationRate);
-    directEmployerSavings += calculateEmployerAnnualSavings(employees.length, denAvg, hc.dental.participationRate);
-    directEmployerSavings += calculateEmployerAnnualSavings(employees.length, visAvg, hc.vision.participationRate);
-  }
-
-  const totalEmployerSavings = Math.round(directEmployerSavings);
   const totalEmployeeSavings = employeeResults.reduce((s, r) => s + r.netImpact, 0);
-  const qualifiedCount = employeeResults.filter((r) => r.isQualified).length;
+  // Unify: positively impacted = qualified (employees with positive net impact)
   const positiveCount = employeeResults.filter((r) => r.isPositive).length;
 
   const salaryBuckets = bucketBySalary(employeeResults);
@@ -109,10 +102,7 @@ export function analyzeEmployees(
     netImpactPerEmployee: avg(bucket.employees.map((e) => e.netImpact)),
   }));
 
-  const savingsRange = calculateSavingsRange(totalEmployerSavings, 'informed_analysis');
   const avgEmployeeSavings = employees.length > 0 ? totalEmployeeSavings / employees.length : 0;
-
-  const periods = payPeriodsPerYear(config.payrollFrequency);
 
   const paycheckComparisons: PaycheckComparison[] = tierResults.map((tier) => {
     const grossPay = tier.avgSalary / periods;
@@ -123,7 +113,7 @@ export function analyzeEmployees(
     const dominantFiling = bucket ? getMostCommonFiling(bucket.employees) : 'single' as const;
 
     const federalRate = getFederalMarginalRate(tier.avgSalary, dominantFiling);
-    const stateRate = STATE_TAX_RATES[dominantState] ?? 0.05;
+    const stateRate = STATE_TAX_RATES[dominantState] ?? 0;
     const ficaRate = FICA_RATES.combined;
 
     const fedTaxBefore = grossPay * federalRate;
@@ -136,7 +126,10 @@ export function analyzeEmployees(
     const ficaAfter = taxableAfter * ficaRate;
 
     const adminPerPay = ADMIN_FEE_ANNUAL / periods;
-    const netBefore = grossPay - fedTaxBefore - stateTaxBefore - ficaBefore;
+
+    // Before: employee pays premium post-tax, so subtract it from net
+    const netBefore = grossPay - fedTaxBefore - stateTaxBefore - ficaBefore - preTaxPerPay;
+    // After: employee pays premium pre-tax, reducing the tax base
     const netAfter = grossPay - preTaxPerPay - fedTaxAfter - stateTaxAfter - ficaAfter - adminPerPay;
 
     const increase = netAfter - netBefore;
@@ -167,14 +160,14 @@ export function analyzeEmployees(
 
   return {
     result: {
-      employerAnnualFICASavings: Math.round(totalEmployerSavings),
+      employerAnnualFICASavings: totalEmployerSavings,
       avgEmployeeAnnualSavings: Math.round(avgEmployeeSavings),
-      qualifiedEmployees: qualifiedCount,
+      qualifiedEmployees: positiveCount,
       totalEmployees: employees.length,
       positivelyImpactedCount: positiveCount,
       positivelyImpactedPercent: employees.length > 0 ? Math.round((positiveCount / employees.length) * 100) : 0,
       tierResults,
-      savingsRange,
+      savingsRange: { conservative: totalEmployerSavings, projected: totalEmployerSavings, optimal: totalEmployerSavings, factors: [] },
       netAnnualBenefit: Math.round(totalEmployerSavings - ADMIN_FEE_ANNUAL * employees.length),
       totalAdminFee: Math.round(ADMIN_FEE_ANNUAL * employees.length),
     },

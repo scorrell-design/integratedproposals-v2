@@ -53,13 +53,15 @@ export function EmployeeLookup({ employees, employeeResults, payPeriodsPerYear }
     const fedBefore = gross * fedRate;
     const stateBefore = gross * stateRate;
     const ficaBefore = gross * ficaRate;
-    const netBefore = gross - fedBefore - stateBefore - ficaBefore;
+    // Before plan: employee pays premium post-tax
+    const netBefore = gross - fedBefore - stateBefore - ficaBefore - preTaxPer;
 
     const taxableAfter = gross - preTaxPer;
     const fedAfter = taxableAfter * fedRate;
     const stateAfter = taxableAfter * stateRate;
     const ficaAfter = taxableAfter * ficaRate;
-    const netAfter = taxableAfter - fedAfter - stateAfter - ficaAfter;
+    // After plan: premium is pre-tax, reducing the tax base
+    const netAfter = gross - preTaxPer - fedAfter - stateAfter - ficaAfter;
 
     const increase = netAfter - netBefore;
     return {
@@ -132,11 +134,11 @@ export function EmployeeLookup({ employees, employeeResults, payPeriodsPerYear }
             style={{ boxShadow: '0 0 24px rgba(0, 95, 120, 0.08)', maxWidth: 340, margin: '0 auto 20px' }}
           >
             <p className="font-mono text-[28px] font-bold text-accent">
-              +{formatDollarCents(calc.increase)}
+              {calc.increase >= 0 ? '+' : ''}{formatDollarCents(calc.increase)}
             </p>
             <p className="mt-1 text-[14px] font-bold text-accent">per paycheck</p>
             <p className="mt-0.5 text-[12px] text-text-tertiary">
-              ({formatDollarCents(calc.annualIncrease)} more per year)
+              ({calc.annualIncrease >= 0 ? '+' : ''}{formatDollarCents(calc.annualIncrease)} per year)
             </p>
           </div>
 

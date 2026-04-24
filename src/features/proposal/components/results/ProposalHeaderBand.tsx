@@ -9,7 +9,8 @@ interface ProposalHeaderBandProps {
 
 export function ProposalHeaderBand({ companyName, employeeCount, stateCodes, payCycle }: ProposalHeaderBandProps) {
   const date = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-  const stateLabels = [...new Set(stateCodes)].slice(0, 5).map((c) => c.toUpperCase()).join(', ');
+  const validCodes = [...new Set(stateCodes)].filter((c) => /^[A-Z]{2}$/i.test(c));
+  const stateLabels = validCodes.slice(0, 3).map((c) => c.toUpperCase()).join(', ');
 
   return (
     <div className="glass-primary flex flex-wrap items-end justify-between gap-4">
