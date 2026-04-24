@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { CheckCircle, AlertCircle, XCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { CheckCircle, XCircle } from 'lucide-react';
 import type { RecognizedField } from '../engine/mini-file-validator';
 
 interface RecognizedFieldsViewProps {
@@ -9,19 +8,14 @@ interface RecognizedFieldsViewProps {
   companyName?: string;
 }
 
-const VISIBLE_THRESHOLD = 7;
-
 export function RecognizedFieldsView({ recognizedFields, rowCount, fileName, companyName }: RecognizedFieldsViewProps) {
-  const [showAll, setShowAll] = useState(false);
-
-  const detectedFields = recognizedFields.filter((f) => f.status === 'detected');
+  // Only show required fields + optional fields that were actually detected
+  const relevantFields = recognizedFields.filter((f) => f.required || f.status === 'detected');
+  const detectedFields = relevantFields.filter((f) => f.status === 'detected');
   const hasRequiredMissing = recognizedFields.some((f) => f.required && f.status === 'not_detected');
 
   const fileExt = fileName.split('.').pop()?.toLowerCase();
   const fileType = fileExt === 'csv' ? 'CSV' : fileExt === 'xlsx' || fileExt === 'xls' ? 'Excel Census' : 'Data File';
-
-  const visibleFields = showAll ? recognizedFields : recognizedFields.slice(0, VISIBLE_THRESHOLD);
-  const hasMore = recognizedFields.length > VISIBLE_THRESHOLD;
 
   return (
     <div className="glass-primary">
@@ -35,22 +29,10 @@ export function RecognizedFieldsView({ recognizedFields, rowCount, fileName, com
             Recognized Fields
           </p>
           <div className="mt-4 flex flex-col" style={{ gap: 12 }}>
-            {visibleFields.map((field) => (
+            {relevantFields.map((field) => (
               <FieldRow key={field.key} field={field} />
             ))}
           </div>
-          {hasMore && (
-            <button
-              onClick={() => setShowAll(!showAll)}
-              className="mt-3 inline-flex items-center gap-1 text-[13px] font-medium text-accent hover:text-accent-muted transition-colors"
-            >
-              {showAll ? (
-                <>Hide <ChevronUp size={14} /></>
-              ) : (
-                <>Show all ({recognizedFields.length}) <ChevronDown size={14} /></>
-              )}
-            </button>
-          )}
         </div>
 
         {/* Right: Group Summary */}
@@ -66,7 +48,7 @@ export function RecognizedFieldsView({ recognizedFields, rowCount, fileName, com
             <SummaryRow label="Employees Detected" value={String(rowCount)} />
             <SummaryRow label="Pay Cycle" value="Bi-weekly" />
             <SummaryRow label="File Type" value={fileType} />
-            <SummaryRow label="Fields Detected" value={`${detectedFields.length} of ${recognizedFields.length}`} />
+            <SummaryRow label="Fields Detected" value={`${detectedFields.length} of ${relevantFields.length}`} />
           </div>
         </div>
       </div>
@@ -98,21 +80,11 @@ function FieldRow({ field }: { field: RecognizedField }) {
     );
   }
 
-  if (field.required) {
-    return (
-      <div className="flex items-center gap-2.5">
-        <XCircle size={16} style={{ color: '#DC2626', flexShrink: 0 }} />
-        <span className="text-[14px] text-text-primary">{field.label}</span>
-        <span className="text-[12px]" style={{ color: '#DC2626' }}>not detected (required)</span>
-      </div>
-    );
-  }
-
   return (
     <div className="flex items-center gap-2.5">
-      <AlertCircle size={16} style={{ color: '#D97706', flexShrink: 0 }} />
+      <XCircle size={16} style={{ color: '#DC2626', flexShrink: 0 }} />
       <span className="text-[14px] text-text-primary">{field.label}</span>
-        <span className="text-[12px]" style={{ color: '#D97706' }}>not detected (optional)</span>
+      <span className="text-[12px]" style={{ color: '#DC2626' }}>not detected (required)</span>
     </div>
   );
 }
