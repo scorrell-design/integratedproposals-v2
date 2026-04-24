@@ -110,8 +110,7 @@ export function BenefitsSection() {
         {/* Healthcare Tab */}
         {activeTab === 'Healthcare' && (
           <div className="glass-secondary !rounded-[14px]" style={{ padding: 24 }}>
-            {/* Single participation rate — matches Retirement card pattern */}
-            <div className="flex items-center gap-4" style={{ marginBottom: 20 }}>
+            <div className="flex items-center gap-3" style={{ marginBottom: 20 }}>
               <span className="text-[14px] font-medium text-text-primary">Participation Rate</span>
               <PercentInput
                 value={benefits.healthcare.participationRate}
@@ -119,57 +118,53 @@ export function BenefitsSection() {
               />
             </div>
 
-            <div style={{ height: 1, background: '#D9CFC0', marginBottom: 20 }} />
+            <div style={{ height: 1, background: '#D9CFC0', marginBottom: 16 }} />
 
-            {/* Column headers */}
-            <div
-              className="grid items-end"
-              style={{ gridTemplateColumns: '1fr 140px 140px', gap: '0 24px', marginBottom: 12 }}
-            >
-              <div />
-              <div className="text-center text-[11px] font-semibold text-text-secondary uppercase" style={{ letterSpacing: '0.5px' }}>
-                Individual
+            <div style={{ maxWidth: 520 }}>
+              <div
+                className="grid items-end"
+                style={{ gridTemplateColumns: '100px 120px 120px', gap: '0 16px', marginBottom: 8 }}
+              >
+                <div />
+                <div className="text-[11px] font-semibold text-text-secondary uppercase" style={{ letterSpacing: '0.5px' }}>
+                  Individual
+                </div>
+                <div className="text-[11px] font-semibold text-text-secondary uppercase" style={{ letterSpacing: '0.5px' }}>
+                  Family
+                </div>
               </div>
-              <div className="text-center text-[11px] font-semibold text-text-secondary uppercase" style={{ letterSpacing: '0.5px' }}>
-                Family
-              </div>
-            </div>
 
-            {/* Rows — premiums only */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              {(['medical', 'dental', 'vision'] as const).map((benefit) => (
-                <div
-                  key={benefit}
-                  className="grid items-center"
-                  style={{ gridTemplateColumns: '1fr 140px 140px', gap: '0 24px' }}
-                >
-                  <div className="text-[14px] font-medium text-text-primary capitalize">{benefit}</div>
-                  <div className="flex justify-center">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {(['medical', 'dental', 'vision'] as const).map((benefit) => (
+                  <div
+                    key={benefit}
+                    className="grid items-center"
+                    style={{ gridTemplateColumns: '100px 120px 120px', gap: '0 16px' }}
+                  >
+                    <div className="text-[14px] font-medium text-text-primary capitalize">{benefit}</div>
                     <DollarInput
                       value={benefits.healthcare[benefit].premiums.individual}
                       onChange={(v) => updateHcPremium(benefit, 'individual', v)}
                     />
-                  </div>
-                  <div className="flex justify-center">
                     <DollarInput
                       value={benefits.healthcare[benefit].premiums.family}
                       onChange={(v) => updateHcPremium(benefit, 'family', v)}
                     />
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
 
-            <p className="text-[11px] text-text-tertiary" style={{ marginTop: 16 }}>
-              Monthly premium per employee
-            </p>
+              <p className="text-[11px] text-text-tertiary" style={{ marginTop: 12 }}>
+                Monthly premium per employee
+              </p>
+            </div>
           </div>
         )}
 
         {/* Retirement Tab */}
         {activeTab === 'Retirement' && (
-          <div>
-            <div className="flex items-center gap-4 mb-6" style={{ maxWidth: 400 }}>
+          <div style={{ maxWidth: 520 }}>
+            <div className="flex items-center gap-3" style={{ marginBottom: 16 }}>
               <span className="text-[14px] font-medium text-text-primary">Participation Rate</span>
               <PercentInput
                 value={benefits.retirement.participationRate}
@@ -179,7 +174,8 @@ export function BenefitsSection() {
 
             <button
               onClick={() => setShowRetirementTiers(!showRetirementTiers)}
-              className="inline-flex items-center gap-1.5 text-[13px] font-medium text-text-secondary hover:text-text-primary transition-colors mb-4"
+              className="inline-flex items-center gap-1.5 text-[13px] font-medium text-text-secondary hover:text-text-primary transition-colors"
+              style={{ marginBottom: 12 }}
             >
               <motion.span animate={{ rotate: showRetirementTiers ? 180 : 0 }} transition={{ duration: 0.2 }}>
                 <ChevronDown size={14} className="text-current" />
@@ -197,10 +193,10 @@ export function BenefitsSection() {
                   className="overflow-hidden"
                 >
                   <div className="glass-secondary !rounded-[14px]">
-                    <div className="grid grid-cols-4 gap-4">
+                    <div className="grid grid-cols-4" style={{ gap: 12 }}>
                       {(['entry', 'mid', 'senior', 'executive'] as const).map((tier) => (
                         <div key={tier} className="text-center">
-                          <p className="text-[12px] font-medium text-text-secondary capitalize mb-2">{tier}</p>
+                          <p className="text-[12px] font-medium text-text-secondary capitalize" style={{ marginBottom: 6 }}>{tier}</p>
                           <PercentInput
                             value={benefits.retirement.contributionRates[tier]}
                             onChange={(val) =>
@@ -227,15 +223,15 @@ export function BenefitsSection() {
 
         {/* HSA Tab */}
         {activeTab === 'HSA' && (
-          <div>
-            <div className="flex items-center gap-4" style={{ maxWidth: 400, marginBottom: 24 }}>
+          <div style={{ maxWidth: 520 }}>
+            <div className="flex items-center gap-3" style={{ marginBottom: 12 }}>
               <span className="text-[14px] font-medium text-text-primary">Participation Rate</span>
               <PercentInput
                 value={benefits.hsa.participationRate}
                 onChange={(val) => setBenefits({ hsa: { ...benefits.hsa, participationRate: val } })}
               />
             </div>
-            <p className="text-[12px] text-text-tertiary italic" style={{ marginTop: 8 }}>
+            <p className="text-[12px] text-text-tertiary italic">
               Savings estimate will use national average HSA contribution data.
             </p>
           </div>
