@@ -94,7 +94,7 @@ export function InformedAnalysisPage({ groupId: _groupId = 'demo' }: InformedAna
   const [file, setFile] = useState<File | null>(null);
   const [rawData, setRawData] = useState<Record<string, string>[]>([]);
   const [columns, setColumns] = useState<string[]>([]);
-  const [mapping, setMapping] = useState<ColumnMapping>({ salary: null, filingStatus: null, stateCode: null, employeeName: null, employeeId: null, employmentStatus: null, hireDate: null, dob: null, healthPremium: null, additionalPreTax: null });
+  const [mapping, setMapping] = useState<ColumnMapping>({ salary: null, filingStatus: null, stateCode: null, employeeName: null, employeeId: null, employmentStatus: null, hireDate: null, dob: null, healthPremium: null, additionalPreTax: null, planTier: null });
   const [validation, setValidation] = useState<ValidationResult | null>(null);
   const [employees, setEmployees] = useState<ParsedEmployeeRow[]>([]);
   const [result, setResult] = useState<ProposalResult | null>(null);
@@ -223,6 +223,7 @@ export function InformedAnalysisPage({ groupId: _groupId = 'demo' }: InformedAna
         hireDate: currentMapping.hireDate ? row[currentMapping.hireDate] : undefined,
         dob: currentMapping.dob ? row[currentMapping.dob] : undefined,
         preTaxPerPeriod: totalPreTaxPP > 0 ? totalPreTaxPP : undefined,
+        planTier: currentMapping.planTier ? (row[currentMapping.planTier] || '').trim() || undefined : undefined,
       };
     }).filter((emp) => emp.salary > 0);
 

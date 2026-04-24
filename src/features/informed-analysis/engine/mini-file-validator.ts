@@ -9,6 +9,7 @@ export interface ColumnMapping {
   dob: string | null;
   healthPremium: string | null;
   additionalPreTax: string | null;
+  planTier: string | null;
 }
 
 export interface RecognizedField {
@@ -51,6 +52,7 @@ const OVERTIME_PATTERNS = /overtime|ot.?pay|ot.?hours/i;
 const BONUS_PATTERNS = /bonus|commission/i;
 const HEALTH_PREMIUM_PATTERNS = /health.?ins|medical.?prem|health.?premium|insurance.?ded|employee.?contribution.*medical|major.?medical|ee.?medical/i;
 const ADDITIONAL_PRETAX_PATTERNS = /additional.?pre.?tax|pre.?tax.?ded|other.?pre.?tax|supplemental.?pre.?tax|vol.*pre.?tax/i;
+const PLAN_TIER_PATTERNS = /plan.?tier|plan.?type|plan.?level|benefit.?plan|plan$|coverage.?tier|coverage.?level|medical.?plan|plan.?name/i;
 const RETIREMENT_PATTERNS = /401k|401\(k\)|retirement|pension|403b/i;
 
 function matchColumn(columns: string[], pattern: RegExp): string | null {
@@ -71,6 +73,7 @@ export function detectColumnMapping(columns: string[]): ColumnMapping {
     dob: matchColumn(columns, DOB_PATTERNS),
     healthPremium: matchColumn(columns, HEALTH_PREMIUM_PATTERNS),
     additionalPreTax: matchColumn(columns, ADDITIONAL_PRETAX_PATTERNS),
+    planTier: matchColumn(columns, PLAN_TIER_PATTERNS),
   };
 }
 
@@ -94,6 +97,7 @@ export function detectRecognizedFields(columns: string[]): RecognizedField[] {
     { key: 'overtimePay', label: 'Overtime Pay', pattern: OVERTIME_PATTERNS, required: false },
     { key: 'bonusCommission', label: 'Bonus / Commission', pattern: BONUS_PATTERNS, required: false },
     { key: 'healthPremium', label: 'Health Insurance Premium', pattern: HEALTH_PREMIUM_PATTERNS, required: false },
+    { key: 'planTier', label: 'Plan Tier', pattern: PLAN_TIER_PATTERNS, required: false },
     { key: 'retirement', label: '401(k) Contribution', pattern: RETIREMENT_PATTERNS, required: false },
   ];
 

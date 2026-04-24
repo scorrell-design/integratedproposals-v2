@@ -6,7 +6,7 @@ import { ExecutiveSummary } from '@/features/proposal/components/results/Executi
 import { PlainLanguageSummary } from '@/features/proposal/components/results/PlainLanguageSummary';
 import { EmployerImpactBreakdown } from '@/features/proposal/components/results/EmployerImpactBreakdown';
 import { EmployeeLookup } from '../components/EmployeeLookup';
-import { TierBreakdownTable } from '@/features/proposal/components/results/TierBreakdownTable';
+import { PlanTierBreakdown, buildPlanTierRows } from '../components/PlanTierBreakdown';
 import { SavingsFlowDiagram } from '@/features/proposal/components/results/SavingsFlowDiagram';
 import { ImplementationTimeline } from '@/features/proposal/components/results/ImplementationTimeline';
 import { FAQAccordion } from '@/features/proposal/components/results/FAQAccordion';
@@ -64,11 +64,15 @@ export function IAResultsSection({
 
   const totalPreTaxDeductions = employeeResults.reduce((s, r) => s + r.preTaxDeduction, 0);
   const usedStateCodes = [...new Set(employees.map((e) => e.stateCode))];
-  // Pick a positively-impacted mid-tier for the example; fall back to any mid-tier
+
+  const hasPlanTiers = employees.some((e) => !!e.planTier);
+  const planTierRows = hasPlanTiers ? buildPlanTierRows(employeeResults, periods) : [];
+  // Pick a positively-impacted example for the paycheck comparison; use generic label
   const positiveTiers = paycheckComparisons.filter((t) => t.perPaycheckIncrease > 0);
-  const midTier = positiveTiers.length >= 2
+  const rawMidTier = positiveTiers.length >= 2
     ? positiveTiers[Math.floor(positiveTiers.length / 2)]
     : positiveTiers[0] ?? (paycheckComparisons.length >= 2 ? paycheckComparisons[Math.floor(paycheckComparisons.length / 2)] : paycheckComparisons[0]);
+  const midTier = rawMidTier ? { ...rawMidTier, tier: 'Example' } : undefined;
 
   const payCycleLabel = freq === 'weekly' ? 'Weekly' : freq === 'biweekly' ? 'Bi-weekly' : freq === 'semimonthly' ? 'Semi-monthly' : 'Monthly';
 
@@ -96,7 +100,9 @@ export function IAResultsSection({
         {employees.length > 0 && (
           <EmployeeLookup employees={employees} employeeResults={employeeResults} payPeriodsPerYear={periods} />
         )}
-        <TierBreakdownTable tiers={result.tierResults} payPeriodsPerYear={periods} totalEmployees={result.totalEmployees} />
+        {planTierRows.length > 0 && (
+          <PlanTierBreakdown rows={planTierRows} totalEmployees={result.totalEmployees} payPeriodsPerYear={periods} />
+        )}
         <SavingsFlowDiagram
           totalPreTaxDeductions={Math.round(totalPreTaxDeductions)}
           totalFICASavings={Math.round(result.employerAnnualFICASavings)}

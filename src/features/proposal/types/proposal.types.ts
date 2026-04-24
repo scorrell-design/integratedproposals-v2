@@ -92,6 +92,7 @@ export interface ParsedEmployeeRow {
   hireDate?: string;
   dob?: string;
   preTaxPerPeriod?: number;
+  planTier?: string;
 }
 
 export interface ProposalResult {
