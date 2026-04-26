@@ -92,7 +92,9 @@ export function QuickProposalPage({ groupId = 'demo' }: QuickProposalPageProps) 
   const handleDisclaimerAccept = useCallback(() => {
     setShowDisclaimer(false);
     setShowResults(true);
-    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+    requestAnimationFrame(() => {
+      document.getElementById('proposal-results')?.scrollIntoView({ behavior: 'instant', block: 'start' });
+    });
   }, []);
 
   const handleDisclaimerBack = useCallback(() => {
@@ -172,6 +174,7 @@ export function QuickProposalPage({ groupId = 'demo' }: QuickProposalPageProps) 
 
             {showResults && (
               <motion.div
+                id="proposal-results"
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, ease: 'easeOut' }}
