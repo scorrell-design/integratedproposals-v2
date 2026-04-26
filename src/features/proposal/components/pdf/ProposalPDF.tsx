@@ -266,13 +266,13 @@ export function ProposalPDF({ company, result, proposalType, brokerName, brokerE
         {/* Header Band */}
         <View style={s.headerBand}>
           <Text style={s.headerBrandText}>SYNRGY</Text>
-          <Text style={s.headerEyebrow}>Section 125 Proposal</Text>
+          <Text style={s.headerEyebrow}>Hospital Indemnity Plan Proposal</Text>
         </View>
 
         {/* Company Info */}
         <Text style={s.companyName}>{company.name || 'Company'}</Text>
         <View style={s.orangeBar} />
-        <Text style={s.subtitle}>Section 125 Cafeteria Plan — Tax Savings Proposal</Text>
+        <Text style={s.subtitle}>Hospital Indemnity Plan — Tax Savings Proposal</Text>
         <Text style={s.dateLine}>{date} · {company.employeeCount} employees</Text>
         {brokerName ? (
           <Text style={[s.dateLine, { marginTop: 2 }]}>Prepared by {brokerName}</Text>
@@ -303,7 +303,7 @@ export function ProposalPDF({ company, result, proposalType, brokerName, brokerE
         <View style={s.qualRow}>
           <View style={s.qualCard}>
             <Text style={s.qualValue}>{result.qualifiedEmployees} of {result.totalEmployees} ({qualifiedPct}%)</Text>
-            <Text style={s.qualLabel}>Eligible Employees — meet Section 125 income threshold</Text>
+            <Text style={s.qualLabel}>Eligible Employees — meet income threshold</Text>
           </View>
           <View style={s.qualCard}>
             <Text style={s.qualValue}>{result.positivelyImpactedCount} ({result.positivelyImpactedPercent}%)</Text>
@@ -338,7 +338,7 @@ export function ProposalPDF({ company, result, proposalType, brokerName, brokerE
         })}
         {/* Fix #4: methodology note */}
         <Text style={s.tierMethodology}>
-          Tier FICA savings assume average pre-tax contributions consistent with typical Section 125 plan participation.
+          Tier FICA savings assume average pre-tax contributions consistent with typical plan participation.
         </Text>
 
         {/* Prepared By */}
@@ -357,13 +357,13 @@ export function ProposalPDF({ company, result, proposalType, brokerName, brokerE
             This proposal provides estimated projections based on the data provided and current federal and state tax rates as of {currentTaxYear}. Actual results will depend on employee participation rates, workforce changes, benefit elections, and tax law modifications.
           </Text>
           <Text style={s.disclaimerText}>
-            Savings estimates assume all eligible employees are W-2 employees of the employer group. Independent contractors and 1099 workers are not eligible for Section 125 plans.
+            Savings estimates assume all eligible employees are W-2 employees of the employer group. Independent contractors and 1099 workers are not eligible for plans offered under Section 125 of the Internal Revenue Code.
           </Text>
           <Text style={s.disclaimerText}>
-            Section 125 plan availability, design requirements, and tax treatment may vary by state. Consult state-specific regulations before implementation.
+            Plan availability, design requirements, and tax treatment under Section 125 of the Internal Revenue Code may vary by state. Consult state-specific regulations before implementation.
           </Text>
           <Text style={s.disclaimerText}>
-            This document is for informational purposes only and does not constitute tax, legal, or financial advice. Consult with a qualified tax professional before implementing a Section 125 Cafeteria Plan.
+            This document is for informational purposes only and does not constitute tax, legal, or financial advice. Consult with a qualified tax professional before implementing a hospital indemnity plan under Section 125 of the Internal Revenue Code.
           </Text>
           <Text style={s.disclaimerText}>
             Projected Savings represents the most likely outcome based on provided data. Actual savings may fall within the Conservative Estimate to Optimal Savings range shown above.
@@ -376,7 +376,7 @@ export function ProposalPDF({ company, result, proposalType, brokerName, brokerE
         {/* Footer */}
         <View style={s.footer} fixed>
           <Text style={s.footerText}>
-            Section 125 Cafeteria Plan Tax Savings Proposal · Generated {date}
+            Hospital Indemnity Plan Tax Savings Proposal · Generated {date}
           </Text>
           <Text style={s.footerBrand}>SYNRGY</Text>
           <Text style={s.footerText} render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`} />

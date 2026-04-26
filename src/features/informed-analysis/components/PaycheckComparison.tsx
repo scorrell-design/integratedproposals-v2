@@ -63,12 +63,12 @@ export function PaycheckComparison({ tiers, payrollFrequency }: PaycheckComparis
             <PayLine label="Net Pay" value={tier.before.netPay} bold size={18} />
           </div>
 
-          {/* With Section 125 Plan */}
+          {/* With Hospital Indemnity Plan */}
           <div className="glass-secondary !border-accent-border/30">
-            <p className="metric-label mb-3 text-accent-muted">Paycheck with Section 125 Plan</p>
+            <p className="metric-label mb-3 text-accent-muted">Paycheck with Hospital Indemnity Plan</p>
             <SectionLabel>Earnings</SectionLabel>
             <PayLine label="Gross Pay" value={tier.grossPay} />
-            <SectionLabel accent>Section 125 Plan</SectionLabel>
+            <SectionLabel accent>Hospital Indemnity Plan</SectionLabel>
             <div className="rounded-md px-2 py-0.5 -mx-2" style={{ background: 'rgba(217, 119, 6, 0.06)' }}>
               <PayLine label="Pre-Tax Benefit Deduction" value={-tier.withPlan.preTaxDeduction} accent />
             </div>
@@ -78,7 +78,7 @@ export function PaycheckComparison({ tiers, payrollFrequency }: PaycheckComparis
             <PayLine label="State Withholding" value={-tier.withPlan.stateTax} dim saved={stateSaved} />
             <div className="my-2" style={{ height: 1, background: 'rgba(0, 95, 120, 0.15)' }} />
             <div className="rounded-md px-2 py-1 -mx-2" style={{ background: 'rgba(0, 95, 120, 0.06)' }}>
-              <PayLine label="Section 125 Benefit" value={tier.perPaycheckIncrease} accent />
+              <PayLine label="Hospital Indemnity Benefit" value={tier.perPaycheckIncrease} accent />
             </div>
             <SectionLabel>Net Pay</SectionLabel>
             <div className="rounded-md px-2 py-1 -mx-2" style={{ background: 'rgba(5, 150, 105, 0.06)' }}>

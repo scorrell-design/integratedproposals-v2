@@ -74,7 +74,7 @@ export function EmployerImpactBreakdown({ result, payPeriodsPerYear, midTier }: 
                 </p>
               </div>
               <div style={{ marginBottom: 8 }}>
-                <p className="text-[12px] text-text-tertiary">With Section 125 Plan:</p>
+                <p className="text-[12px] text-text-tertiary">With Hospital Indemnity Plan:</p>
                 <p className="font-mono text-[16px] text-text-primary">
                   {formatDollarCents(midTier.withPlan.netPay)}/paycheck
                 </p>

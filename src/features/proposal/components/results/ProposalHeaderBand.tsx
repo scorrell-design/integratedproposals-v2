@@ -16,7 +16,7 @@ export function ProposalHeaderBand({ companyName, employeeCount, stateCodes, pay
     <div className="glass-primary flex flex-wrap items-end justify-between gap-4">
       <div>
         <h2 className="text-[22px] font-bold text-text-primary">{companyName || 'Your Company'}</h2>
-        <p className="mt-1 text-[14px] text-text-secondary">Section 125 Cafeteria Plan Analysis</p>
+        <p className="mt-1 text-[14px] text-text-secondary">Hospital Indemnity Plan Analysis</p>
         <p className="mt-0.5 text-[13px] text-text-tertiary">Prepared {date}</p>
       </div>
       <div className="text-right">

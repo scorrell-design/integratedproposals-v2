@@ -30,4 +30,4 @@ export const FAQ_ITEMS = [
   { q: 'How long does implementation take?', a: 'The entire process typically takes 2-3 weeks from initial setup to full implementation, with minimal disruption to your operations.' },
 ] as const;
 
-export const HOW_WE_CALCULATE = 'Our sample illustration tool combines industry-standard wages, national W-4 filing patterns, and average U.S. household statistics to create realistic employee populations by industry. With minimal inputs, we can quickly estimate a hypothetical assessment as to the feasibility of implementing the SYNRGY Health plan. For accurate assessments a more detailed analysis needs to be provided.';
+export const HOW_WE_CALCULATE = 'Our sample illustration tool combines industry-standard wages, national W-4 filing patterns, and average U.S. household statistics to create realistic employee populations by industry. With minimal inputs, we can quickly estimate a hypothetical assessment as to the feasibility of implementing a Hospital Indemnity Plan under Section 125. For accurate assessments a more detailed analysis needs to be provided.';

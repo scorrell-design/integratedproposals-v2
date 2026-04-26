@@ -4,8 +4,8 @@ import { ChevronDown } from 'lucide-react';
 
 const FAQ_ITEMS = [
   {
-    q: 'What is a Section 125 Cafeteria Plan?',
-    a: 'An IRS provision that allows employees to pay for certain benefits with pre-tax dollars, reducing both employee and employer tax liabilities.',
+    q: 'How does this plan work?',
+    a: 'This is a hospital indemnity plan offered under Section 125 of the Internal Revenue Code. It allows employees to pay their plan premiums with pre-tax dollars, which reduces their taxable income and lowers federal income tax, Social Security, and Medicare obligations. Because the premiums are deducted before taxes are calculated, employers also save on their share of FICA taxes for every participating employee.',
   },
   {
     q: 'How do employees benefit?',

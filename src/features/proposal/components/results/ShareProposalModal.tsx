@@ -46,7 +46,7 @@ export function ShareProposalModal({ open, onClose, companyName, proposalType }:
 
 Hi,
 
-I'm sharing your Section 125 Cafeteria Plan benefits proposal for ${companyName || 'Company'}. This analysis shows the projected tax savings for your organization and employees.
+I'm sharing your Hospital Indemnity Plan benefits proposal for ${companyName || 'Company'}. This analysis shows the projected tax savings for your organization and employees.
 
 You can view your proposal using the secure link below:
 

@@ -281,7 +281,7 @@ export function InformedAnalysisPage({ groupId: _groupId = 'demo' }: InformedAna
         {/* Hero */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-[720px]">
           <div className="glass-primary text-center">
-            <p className="text-[12px] font-semibold uppercase tracking-[0.15em] text-text-tertiary">Section 125 Proposal Tool</p>
+            <p className="text-[12px] font-semibold uppercase tracking-[0.15em] text-text-tertiary">Hospital Indemnity Plan Proposal Tool</p>
             <h1 className="mt-3 text-[44px] font-bold text-text-primary">Informed Analysis</h1>
             <p className="mx-auto mt-4 max-w-[560px] text-[15px] leading-relaxed text-text-secondary">
               Upload your census or payroll file for a high-accuracy, employee-level savings analysis with paycheck comparison views.

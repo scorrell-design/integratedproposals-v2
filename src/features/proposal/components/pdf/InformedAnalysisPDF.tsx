@@ -372,7 +372,7 @@ export function InformedAnalysisPDF({ groupName, result, employeeResults, payrol
 
         <Text style={s.groupName}>{groupName || 'Company'}</Text>
         <View style={s.orangeBar} />
-        <Text style={s.subtitle}>Section 125 Cafeteria Plan — Census-Based Tax Savings Analysis</Text>
+        <Text style={s.subtitle}>Hospital Indemnity Plan — Census-Based Tax Savings Analysis</Text>
         <Text style={s.censusBadge}>CENSUS-BASED</Text>
         <Text style={s.metaLine}>{date} · {result.totalEmployees} employees · Based on uploaded census data</Text>
 
@@ -433,7 +433,7 @@ export function InformedAnalysisPDF({ groupName, result, employeeResults, payrol
         )}
 
         <View style={s.footer} fixed>
-          <Text style={s.footerText}>Section 125 Informed Analysis · Generated {date}</Text>
+          <Text style={s.footerText}>Hospital Indemnity Plan Analysis · Generated {date}</Text>
           <Text style={s.footerBrand}>SYNRGY</Text>
           <Text style={s.footerText} render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`} />
         </View>
@@ -478,7 +478,7 @@ export function InformedAnalysisPDF({ groupName, result, employeeResults, payrol
             )}
 
             <View style={s.footer} fixed>
-              <Text style={s.footerText}>Section 125 Informed Analysis · Generated {date}</Text>
+              <Text style={s.footerText}>Hospital Indemnity Plan Analysis · Generated {date}</Text>
               <Text style={s.footerBrand}>SYNRGY</Text>
               <Text style={s.footerText} render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`} />
             </View>
@@ -523,7 +523,7 @@ export function InformedAnalysisPDF({ groupName, result, employeeResults, payrol
         ))}
 
         <View style={s.footer} fixed>
-          <Text style={s.footerText}>Section 125 Informed Analysis · Generated {date}</Text>
+          <Text style={s.footerText}>Hospital Indemnity Plan Analysis · Generated {date}</Text>
           <Text style={s.footerBrand}>SYNRGY</Text>
           <Text style={s.footerText} render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`} />
         </View>
@@ -545,16 +545,16 @@ export function InformedAnalysisPDF({ groupName, result, employeeResults, payrol
             Informed Analysis calculations are based on actual employee data and are accurate to within 1% of realized savings, assuming no changes to workforce composition, salary, or benefit elections between analysis and plan implementation.
           </Text>
           <Text style={s.disclaimerText}>
-            Savings estimates assume all listed employees are W-2 employees of the employer group. Independent contractors and 1099 workers are not eligible for Section 125 plans.
+            Savings estimates assume all listed employees are W-2 employees of the employer group. Independent contractors and 1099 workers are not eligible for plans offered under Section 125 of the Internal Revenue Code.
           </Text>
           <Text style={s.disclaimerText}>
-            Section 125 plan availability, design requirements, and tax treatment may vary by state. Consult state-specific regulations before implementation.
+            Plan availability, design requirements, and tax treatment under Section 125 of the Internal Revenue Code may vary by state. Consult state-specific regulations before implementation.
           </Text>
           <Text style={s.disclaimerText}>
             Employee identifiers in this document have been anonymized. No personally identifiable information is included in this output.
           </Text>
           <Text style={s.disclaimerText}>
-            This document is for informational purposes only and does not constitute tax, legal, or financial advice. Consult with a qualified tax professional before implementing a Section 125 Cafeteria Plan.
+            This document is for informational purposes only and does not constitute tax, legal, or financial advice. Consult with a qualified tax professional before implementing a hospital indemnity plan under Section 125 of the Internal Revenue Code.
           </Text>
           <Text style={s.disclaimerText}>
             Example values shown use a standard $1,200/month medical premium — the most commonly selected plan tier. Your actual results will reflect the premiums entered.
@@ -562,7 +562,7 @@ export function InformedAnalysisPDF({ groupName, result, employeeResults, payrol
         </View>
 
         <View style={s.footer} fixed>
-          <Text style={s.footerText}>Section 125 Informed Analysis · Generated {date}</Text>
+          <Text style={s.footerText}>Hospital Indemnity Plan Analysis · Generated {date}</Text>
           <Text style={s.footerBrand}>SYNRGY</Text>
           <Text style={s.footerText} render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`} />
         </View>

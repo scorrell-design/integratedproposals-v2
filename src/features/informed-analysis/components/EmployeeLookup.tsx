@@ -154,7 +154,7 @@ export function EmployeeLookup({ employees, employeeResults, payPeriodsPerYear }
               <Line label="Net Pay" value={calc.netBefore} bold />
             </div>
             <div className="glass-secondary !border-accent-border/30">
-              <p className="metric-label mb-3 text-accent-muted">With Section 125 Plan</p>
+              <p className="metric-label mb-3 text-accent-muted">With Hospital Indemnity Plan</p>
               <Line label="Gross Pay" value={calc.gross} />
               <div className="rounded-md px-2 py-0.5 -mx-2" style={{ background: 'rgba(217, 119, 6, 0.06)' }}>
                 <Line label="Pre-Tax Benefit Deduction" value={-calc.preTaxPer} accent />
@@ -164,7 +164,7 @@ export function EmployeeLookup({ employees, employeeResults, payPeriodsPerYear }
               <Line label="FICA" value={-calc.ficaAfter} dim saved={calc.ficaSaved} />
               <div className="glass-divider my-2" />
               <div className="rounded-md px-2 py-0.5 -mx-2" style={{ background: 'rgba(0, 95, 120, 0.06)' }}>
-                <Line label="Section 125 Benefit" value={calc.increase} accent />
+                <Line label="Hospital Indemnity Benefit" value={calc.increase} accent />
               </div>
               <Line label="Net Pay" value={calc.netAfter} bold green />
             </div>

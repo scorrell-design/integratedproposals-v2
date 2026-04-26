@@ -14,7 +14,7 @@ export function ProposalSummaryBanner({
   return (
     <div className="glass-primary flex items-end justify-between">
       <div>
-        <p className="metric-label">Section 125 Savings Proposal</p>
+        <p className="metric-label">Hospital Indemnity Plan Savings Proposal</p>
         <h2 className="mt-2 text-[28px] font-bold text-text-primary">{companyName || 'Your Company'}</h2>
         <p className="mt-1 text-[14px] text-text-secondary">{employeeCount} employees</p>
       </div>

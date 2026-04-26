@@ -15,7 +15,7 @@ export function HeroSection() {
     >
       <div className="glass-primary text-center" style={{ padding: 32 }}>
         <p className="text-[12px] font-semibold uppercase tracking-[0.15em] text-text-tertiary">
-          Section 125 Proposal Tool
+          Hospital Indemnity Plan Proposal Tool
         </p>
 
         <h1 className="mt-3 text-[44px] font-bold leading-tight text-text-primary">
@@ -23,7 +23,7 @@ export function HeroSection() {
         </h1>
 
         <p className="mx-auto mt-4 max-w-[560px] text-[15px] leading-relaxed text-text-secondary">
-          Section 125 Cafeteria Plan proposal builder for health insurance brokers.
+          Hospital Indemnity Plan proposal builder for health insurance brokers.
           Complete the sections below to generate a comprehensive benefits analysis.
         </p>
 
