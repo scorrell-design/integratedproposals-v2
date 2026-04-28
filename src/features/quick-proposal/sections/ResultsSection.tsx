@@ -5,6 +5,8 @@ import {
 } from 'lucide-react';
 import { useProposalStore } from '@/features/proposal/store/proposal.store';
 import { usePDFGeneration } from '@/features/proposal/hooks/usePDFGeneration';
+import { StickyActionBar } from '@/features/proposal/components/results/StickyActionBar';
+import { Toast } from '@/features/proposal/components/shared/Toast';
 import { payPeriodsPerYear, formatDollar, formatDollarCents } from '@/utils/format';
 import { getFederalMarginalRate } from '@/features/proposal/engine';
 import { STATE_TAX_RATES } from '@/config/tax-rates';
@@ -67,6 +69,21 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
   const [detailedOpen, setDetailedOpen] = useState(false);
   const [activePaycheckTab, setActivePaycheckTab] = useState<'benefit' | 'nonbenefit'>('benefit');
   const [faqOpen, setFaqOpen] = useState<number | null>(null);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+
+  const handleSave = useCallback(() => {
+    const msg = company.name
+      ? `Proposal saved to ${company.name}'s portal profile`
+      : 'Proposal draft saved';
+    setToastMessage(msg);
+    setToastVisible(true);
+  }, [company.name]);
+
+  const handleNewProposal = useCallback(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    window.location.reload();
+  }, []);
 
   const periods = result ? payPeriodsPerYear(company.payrollFrequency) : 26;
 
@@ -208,7 +225,7 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
         </button>
       </div>
 
-      <div style={{ padding: '0 40px 60px' }}>
+      <div style={{ padding: '0 40px 80px' }}>
         {/* B2 — Hero */}
         <div style={{ textAlign: 'center', paddingTop: 48 }}>
           <div style={{ maxHeight: 96, marginBottom: 24 }}>
@@ -545,27 +562,20 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
           </p>
         </div>
 
-        {/* B12 — Download */}
-        <div style={{ textAlign: 'center', marginTop: 40 }}>
-          <button
-            onClick={downloadPDF}
-            disabled={isGenerating}
-            className="btn-accent"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 10,
-              fontSize: 16,
-              padding: '14px 32px',
-              opacity: isGenerating ? 0.6 : 1,
-              cursor: isGenerating ? 'not-allowed' : 'pointer',
-            }}
-          >
-            {isGenerating ? <Loader2 size={18} className="animate-spin" /> : <Download size={18} />}
-            Download Full Proposal
-          </button>
-        </div>
       </div>
+
+      <StickyActionBar
+        companyName={company.name}
+        proposalType="quick_proposal"
+        onDownloadPDF={downloadPDF}
+        onSaveDraft={handleSave}
+        onNewProposal={handleNewProposal}
+        isGeneratingPDF={isGenerating}
+        isSaving={false}
+        newProposalLabel="New Proposal"
+      />
+
+      <Toast message={toastMessage} visible={toastVisible} onDismiss={() => setToastVisible(false)} />
 
       <style>{`
         @media (max-width: 900px) {
