@@ -253,12 +253,46 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
           </span>
         </div>
 
-        {/* B3 — KPI Row */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', alignItems: 'stretch', gap: 24, marginTop: 48 }}>
-          <KpiCard label="Anticipated Employee Participation Rate" value={`${participationRate}%`} caption="estimated voluntary participation among eligible employees" />
-          <KpiCard label="Annual Company Savings" value={formatDollar(Math.abs(netSavings))} caption="estimated total employer payroll tax savings" />
-          <KpiCard label="Per Employee Benefit" value={formatDollar(perEmployeeBenefit)} caption="average annual take-home pay increase per qualified employee" />
+        {/* B3 — KPI Row (4 cards, hero Combined first) */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1fr', alignItems: 'stretch', gap: 20, marginTop: 48 }}>
+          <div
+            style={{
+              ...CARD_STYLE,
+              padding: '28px 24px',
+              textAlign: 'center',
+              borderLeft: `4px solid ${TEAL}`,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              background: 'rgba(0, 95, 120, 0.04)',
+            }}
+          >
+            <p style={{ fontWeight: 600, fontSize: 14, color: TEAL, margin: 0 }}>Combined Annual Tax Savings</p>
+            <p style={{ fontFamily: FONT_MONO, fontWeight: 700, fontSize: 42, color: INK, margin: '12px 0', lineHeight: 1 }}>{formatDollar(result.combinedAnnualTaxSavings)}</p>
+            <p style={{ fontWeight: 400, fontSize: 12, color: TERTIARY, margin: 0, lineHeight: 1.5 }}>~{formatDollar(result.combinedPerEmployeeSavings)} per employee/year</p>
+          </div>
+          <KpiCard label="Annual Employer Savings" value={formatDollar(Math.abs(netSavings))} caption="Employer FICA only (7.65%)" />
+          <KpiCard label="Avg. Employee Take-Home Increase" value={formatDollar(perEmployeeBenefit)} caption="Per qualified employee" />
+          <KpiCard label="Qualified Employees" value={`${participationRate}%`} caption={`${result.positivelyImpactedCount} of ${result.totalEmployees} employees`} />
         </div>
+
+        {/* B3b — Combined Savings Breakdown */}
+        <Card style={{ marginTop: 32 }}>
+          <h2 style={{ fontWeight: 600, fontSize: 20, color: INK, marginBottom: 16 }}>Combined Tax Savings — Composition</h2>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <BreakdownRow label="Employer FICA savings (7.65%)" value={result.combinedSavingsBreakdown.employerFICA} />
+            <BreakdownRow label="Employee FICA savings (7.65%)" value={result.combinedSavingsBreakdown.employeeFICA} />
+            <BreakdownRow label="Employee federal tax avoidance (~22%)" value={result.combinedSavingsBreakdown.employeeFederalTax} />
+            <div style={{ height: 1, background: BORDER, margin: '4px 0' }} />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0' }}>
+              <span style={{ fontWeight: 600, fontSize: 15, color: INK }}>Total combined annual savings</span>
+              <span style={{ fontFamily: FONT_MONO, fontWeight: 700, fontSize: 20, color: TEAL }}>{formatDollar(result.combinedAnnualTaxSavings)}</span>
+            </div>
+          </div>
+          <p style={{ fontWeight: 400, fontSize: 12, color: TERTIARY, marginTop: 12, lineHeight: 1.6, fontStyle: 'italic' }}>
+            Combined savings reflects total tax avoidance across employer payroll taxes and employee paycheck taxes when benefits are pre-taxed under Section 125. Employee federal tax estimate uses a 22% blended bracket; actual savings vary by individual filing status.
+          </p>
+        </Card>
 
         {/* B4 — Key Benefits */}
         <div style={{ marginTop: 56, textAlign: 'center' }}>
@@ -700,6 +734,15 @@ function DetailRow({ label, value }: { label: string; value: string }) {
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0' }}>
       <span style={{ fontWeight: 400, fontSize: 14, color: MUTED }}>{label}</span>
       <span style={{ fontFamily: FONT_MONO, fontWeight: 700, fontSize: 18, color: INK }}>{value}</span>
+    </div>
+  );
+}
+
+function BreakdownRow({ label, value }: { label: string; value: number }) {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid rgba(217, 207, 192, 0.5)' }}>
+      <span style={{ fontWeight: 400, fontSize: 14, color: MUTED }}>{label}</span>
+      <span style={{ fontFamily: FONT_MONO, fontWeight: 600, fontSize: 15, color: INK }}>{formatDollar(value)}</span>
     </div>
   );
 }

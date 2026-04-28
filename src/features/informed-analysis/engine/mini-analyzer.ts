@@ -1,4 +1,4 @@
-import { calculateEmployeeFICA, estimatePreTaxDeductions } from '@/features/proposal/engine';
+import { calculateEmployeeFICA, estimatePreTaxDeductions, calculateCombinedSavings } from '@/features/proposal/engine';
 import { ADMIN_FEE_ANNUAL, FICA_RATES } from '@/config/fica-rates';
 import type { ParsedEmployeeRow, ProposalResult, TierResult, PaycheckComparison } from '@/features/proposal/types/proposal.types';
 import type { BenefitsConfig } from '@/features/proposal/types/proposal.types';
@@ -159,6 +159,19 @@ export function analyzeEmployees(
     };
   });
 
+  const combined = calculateCombinedSavings(
+    { totalAnnualPreTaxDeductions: totalAnnualPreTax },
+    positiveCount,
+  );
+
+  if (import.meta.env.DEV) {
+    const expectedCombined = Math.round(totalAnnualPreTax * (0.0765 + 0.0765 + 0.22));
+    console.assert(
+      Math.abs(combined.combinedTotalSavings - expectedCombined) < 2,
+      `Combined savings mismatch: got ${combined.combinedTotalSavings}, expected ~${expectedCombined}`,
+    );
+  }
+
   return {
     result: {
       employerAnnualFICASavings: totalEmployerSavings,
@@ -171,6 +184,13 @@ export function analyzeEmployees(
       savingsRange: { conservative: totalEmployerSavings, projected: totalEmployerSavings, optimal: totalEmployerSavings, factors: [] },
       netAnnualBenefit: Math.round(totalEmployerSavings - ADMIN_FEE_ANNUAL * employees.length),
       totalAdminFee: Math.round(ADMIN_FEE_ANNUAL * employees.length),
+      combinedAnnualTaxSavings: combined.combinedTotalSavings,
+      combinedPerEmployeeSavings: combined.perEmployeeCombined,
+      combinedSavingsBreakdown: {
+        employerFICA: combined.employerFICASavings,
+        employeeFICA: combined.employeeFICASavings,
+        employeeFederalTax: combined.employeeFederalTaxSavings,
+      },
     },
     employeeResults,
     paycheckComparisons,

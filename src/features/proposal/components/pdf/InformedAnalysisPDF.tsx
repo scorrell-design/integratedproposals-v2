@@ -315,7 +315,7 @@ export interface InformedAnalysisPDFProps {
 export function InformedAnalysisPDF({ groupName, result, employeeResults, payrollFrequency }: InformedAnalysisPDFProps) {
   const date = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   const currentYear = new Date().getFullYear();
-  const totalCombinedSavings = result.employerAnnualFICASavings + (result.avgEmployeeAnnualSavings * result.totalEmployees);
+  const bd = result.combinedSavingsBreakdown;
 
   const freq = payrollFrequency as 'weekly' | 'biweekly' | 'semimonthly' | 'monthly';
   const periodsMap: Record<string, number> = { weekly: 52, biweekly: 26, semimonthly: 24, monthly: 12 };
@@ -379,21 +379,45 @@ export function InformedAnalysisPDF({ groupName, result, employeeResults, payrol
         <View style={s.divider} />
 
         <View style={s.kpiRow}>
-          <View style={s.kpiCard}>
-            <Text style={s.kpiLabel}>Total Combined Annual Savings</Text>
-            <Text style={s.kpiValue}>{fmt(totalCombinedSavings)}</Text>
-            <Text style={s.kpiSublabel}>Employer FICA + Employee tax savings</Text>
+          <View style={[s.kpiCard, { flex: 1.4, backgroundColor: 'rgba(0, 95, 120, 0.06)' }]}>
+            <Text style={s.kpiLabel}>Combined Annual Tax Savings</Text>
+            <Text style={[s.kpiValue, { fontSize: 28 }]}>{fmt(result.combinedAnnualTaxSavings)}</Text>
+            <Text style={s.kpiSublabel}>~{fmt(result.combinedPerEmployeeSavings)} per employee/year</Text>
           </View>
           <View style={s.kpiCard}>
-            <Text style={s.kpiLabel}>Employer FICA Savings</Text>
+            <Text style={s.kpiLabel}>Annual Employer Savings</Text>
             <Text style={s.kpiValue}>{fmt(result.employerAnnualFICASavings)}</Text>
-            <Text style={s.kpiSublabel}>Annual employer-side savings</Text>
+            <Text style={s.kpiSublabel}>Employer FICA only (7.65%)</Text>
           </View>
           <View style={s.kpiCard}>
-            <Text style={s.kpiLabel}>Avg. Employee Annual Savings</Text>
-            <Text style={s.kpiValue}>{fmt(result.avgEmployeeAnnualSavings)}</Text>
-            <Text style={s.kpiSublabel}>Per participating employee</Text>
+            <Text style={s.kpiLabel}>Avg. Employee Take-Home Increase</Text>
+            <Text style={s.kpiValue}>{fmt(result.avgEmployeeAnnualSavings)}/yr</Text>
+            <Text style={s.kpiSublabel}>Per qualified employee</Text>
           </View>
+        </View>
+
+        {/* Combined Savings Breakdown */}
+        <View style={{ borderRadius: 6, border: `0.5 solid ${BRAND.border}`, padding: 12, marginBottom: 14 }}>
+          <Text style={{ fontSize: 11, fontWeight: 600, color: BRAND.ink, marginBottom: 8 }}>Combined Tax Savings — Composition</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 4, borderBottom: `0.5 solid ${BRAND.border}` }}>
+            <Text style={{ fontSize: 9, color: BRAND.muted }}>Employer FICA savings (7.65%)</Text>
+            <Text style={{ fontSize: 9, fontWeight: 600, color: BRAND.ink }}>{fmt(bd.employerFICA)}</Text>
+          </View>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 4, borderBottom: `0.5 solid ${BRAND.border}` }}>
+            <Text style={{ fontSize: 9, color: BRAND.muted }}>Employee FICA savings (7.65%)</Text>
+            <Text style={{ fontSize: 9, fontWeight: 600, color: BRAND.ink }}>{fmt(bd.employeeFICA)}</Text>
+          </View>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 4, borderBottom: `0.5 solid ${BRAND.border}` }}>
+            <Text style={{ fontSize: 9, color: BRAND.muted }}>Employee federal tax avoidance (~22%)</Text>
+            <Text style={{ fontSize: 9, fontWeight: 600, color: BRAND.ink }}>{fmt(bd.employeeFederalTax)}</Text>
+          </View>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 6, marginTop: 2 }}>
+            <Text style={{ fontSize: 10, fontWeight: 600, color: BRAND.ink }}>Total combined annual savings</Text>
+            <Text style={{ fontSize: 12, fontWeight: 700, color: BRAND.teal }}>{fmt(result.combinedAnnualTaxSavings)}</Text>
+          </View>
+          <Text style={{ fontSize: 8, color: BRAND.muted, marginTop: 6, lineHeight: 1.4 }}>
+            Combined savings reflects total tax avoidance across employer payroll taxes and employee paycheck taxes when benefits are pre-taxed under Section 125. Employee federal tax estimate uses a 22% blended bracket; actual savings vary by individual filing status.
+          </Text>
         </View>
 
         <View style={s.precisionCallout}>
