@@ -128,7 +128,7 @@ export function useProposalCalculation() {
       qualifiedEmployees: totalQualified,
       totalEmployees: company.employeeCount,
       positivelyImpactedCount: totalPositive,
-      positivelyImpactedPercent: company.employeeCount > 0 ? Math.round((totalPositive / company.employeeCount) * 100) : 0,
+      positivelyImpactedPercent: company.employeeCount > 0 ? Math.min(Math.round((totalPositive / company.employeeCount) * 100), 100) : 0,
       tierResults,
       savingsRange,
       netAnnualBenefit: Math.round(netAnnualBenefit),

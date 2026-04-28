@@ -194,7 +194,7 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
 
   const netSavings = result.employerAnnualFICASavings - result.totalAdminFee;
   const perEmployeeBenefit = result.totalEmployees > 0 ? Math.round(result.avgEmployeeAnnualSavings) : 0;
-  const participationRate = result.positivelyImpactedPercent;
+  const participationRate = Math.min(result.positivelyImpactedPercent, 100);
 
   const activePaycheck = activePaycheckTab === 'benefit' ? benefittingEmployee : nonBenefittingEmployee;
 

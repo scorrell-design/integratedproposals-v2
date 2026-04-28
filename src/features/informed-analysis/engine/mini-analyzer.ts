@@ -166,7 +166,7 @@ export function analyzeEmployees(
       qualifiedEmployees: positiveCount,
       totalEmployees: employees.length,
       positivelyImpactedCount: positiveCount,
-      positivelyImpactedPercent: employees.length > 0 ? Math.round((positiveCount / employees.length) * 100) : 0,
+      positivelyImpactedPercent: employees.length > 0 ? Math.min(Math.round((positiveCount / employees.length) * 100), 100) : 0,
       tierResults,
       savingsRange: { conservative: totalEmployerSavings, projected: totalEmployerSavings, optimal: totalEmployerSavings, factors: [] },
       netAnnualBenefit: Math.round(totalEmployerSavings - ADMIN_FEE_ANNUAL * employees.length),
