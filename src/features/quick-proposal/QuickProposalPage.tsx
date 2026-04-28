@@ -22,10 +22,10 @@ interface QuickProposalPageProps {
 }
 
 const HYPOTHETICAL_TIERS: SalaryTier[] = [
-  { label: 'Entry / Part-Time', level: 'entry', salaryMin: 25000, salaryMax: 40000, workforcePercent: 25 },
-  { label: 'Mid-Level', level: 'mid', salaryMin: 40000, salaryMax: 65000, workforcePercent: 35 },
-  { label: 'Senior', level: 'senior', salaryMin: 65000, salaryMax: 100000, workforcePercent: 25 },
-  { label: 'Executive', level: 'executive', salaryMin: 100000, salaryMax: 180000, workforcePercent: 15 },
+  { label: 'Entry / Part-Time', level: 'entry', salaryMin: 25000, salaryMax: 45000, workforcePercent: 20 },
+  { label: 'Mid-Level', level: 'mid', salaryMin: 45000, salaryMax: 75000, workforcePercent: 35 },
+  { label: 'Senior', level: 'senior', salaryMin: 75000, salaryMax: 120000, workforcePercent: 30 },
+  { label: 'Executive', level: 'executive', salaryMin: 120000, salaryMax: 250000, workforcePercent: 15 },
 ];
 
 export function QuickProposalPage({ groupId = 'demo' }: QuickProposalPageProps) {
@@ -37,19 +37,19 @@ export function QuickProposalPage({ groupId = 'demo' }: QuickProposalPageProps) 
   const [showHypotheticalConfirm, setShowHypotheticalConfirm] = useState(false);
 
   const handleFillHypothetical = useCallback(() => {
-    store.setCompany({ name: 'Sample Industries, Inc.', employeeCount: 150, payrollFrequency: 'biweekly' });
+    store.setCompany({ name: 'Sample Industries, Inc.', employeeCount: 15000, payrollFrequency: 'biweekly' });
     store.setStates([{ stateCode: 'TX', stateName: 'Texas', stateTaxRate: 0, workforcePercent: 100 }]);
-    store.setFilingStatus({ single: 40, married: 45, headOfHousehold: 15 });
+    store.setFilingStatus({ single: 35, married: 50, headOfHousehold: 15 });
     store.setTierCount(4);
     store.setTiers(HYPOTHETICAL_TIERS);
     store.setBenefits({
       enabled: true,
       healthcare: {
         enabled: true,
-        participationRate: 75,
-        medical: { premiums: { individual: 600, family: 1800 } },
-        dental: { premiums: { individual: 45, family: 85 } },
-        vision: { premiums: { individual: 15, family: 40 } },
+        participationRate: 85,
+        medical: { premiums: { individual: 900, family: 2400 } },
+        dental: { premiums: { individual: 60, family: 150 } },
+        vision: { premiums: { individual: 20, family: 55 } },
       },
       retirement: { enabled: false, participationRate: 60, contributionRates: { entry: 4, mid: 6, senior: 8, executive: 10 } },
       hsa: { enabled: false, participationRate: 30, annualContribution: 1500 },
