@@ -38,6 +38,7 @@ const CARD_STYLE: React.CSSProperties = {
 
 interface ResultsSectionProps {
   groupId: string;
+  onNewProposal?: () => void;
 }
 
 interface TierPaycheckData {
@@ -62,7 +63,7 @@ interface TierPaycheckData {
   state: string;
 }
 
-export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
+export function ResultsSection({ groupId: _groupId, onNewProposal }: ResultsSectionProps) {
   const { result, isCalculating, company, tiers, states, filingStatus } = useProposalStore((s) => s);
   const { downloadPDF, isGenerating } = usePDFGeneration();
   const [paycheckOpen, setPaycheckOpen] = useState(true);
@@ -81,9 +82,10 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
   }, [company.name]);
 
   const handleNewProposal = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' });
-    window.location.reload();
-  }, []);
+    if (onNewProposal) {
+      onNewProposal();
+    }
+  }, [onNewProposal]);
 
   const periods = result ? payPeriodsPerYear(company.payrollFrequency) : 26;
 

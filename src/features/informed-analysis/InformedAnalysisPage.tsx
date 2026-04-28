@@ -273,6 +273,7 @@ export function InformedAnalysisPage({ groupId: _groupId = 'demo' }: InformedAna
   const handleReset = useCallback(() => {
     setStep('upload'); setFile(null); setRawData([]); setColumns([]); setResult(null); setEmployees([]); setPaycheckComparisons([]); setEmployeeResults([]); setRecognizedFields([]); setShowDisclaimer(false); setShowConfirmModal(false); setGroupName('');
     rawDataRef.current = []; mappingRef.current = mapping;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
   return (
