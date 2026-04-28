@@ -117,15 +117,16 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
     const fedBefore = grossPay * federalRate;
     const stateBefore = grossPay * weightedStateRate;
     const ficaBefore = grossPay * ficaRate;
-    const netBefore = grossPay - fedBefore - stateBefore - ficaBefore;
+    // Before plan: employee pays the same premium post-tax
+    const netBefore = grossPay - fedBefore - stateBefore - ficaBefore - preTaxPerPay;
 
     const taxableAfter = grossPay - preTaxPerPay;
     const fedAfter = taxableAfter * federalRate;
     const stateAfter = taxableAfter * weightedStateRate;
     const ficaAfter = taxableAfter * ficaRate;
-    const netAfterRaw = taxableAfter - fedAfter - stateAfter - ficaAfter;
-    const synrgyBenefit = netAfterRaw - netBefore;
-    const netAfter = netAfterRaw;
+    // After plan: premium is pre-tax, so taxes are lower
+    const netAfter = grossPay - preTaxPerPay - fedAfter - stateAfter - ficaAfter;
+    const synrgyBenefit = netAfter - netBefore;
 
     const increase = netAfter - netBefore;
     const pctIncrease = netBefore > 0 ? (increase / netBefore) * 100 : 0;
@@ -162,8 +163,10 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
   }, [result, buildTierPaycheck]);
 
   const benefittingEmployee = useMemo(() => {
-    if (tierPaychecks.length < 2) return tierPaychecks[0] ?? null;
-    return tierPaychecks[1];
+    const positive = tierPaychecks.filter((t) => t.increase > 0);
+    if (positive.length === 0) return null;
+    positive.sort((a, b) => b.increase - a.increase);
+    return positive[Math.floor(positive.length / 2)] ?? positive[0];
   }, [tierPaychecks]);
 
   const nonBenefittingEmployee = useMemo(() => {
@@ -332,13 +335,13 @@ export function ResultsSection({ groupId: _groupId }: ResultsSectionProps) {
                           <PaySection title="Earnings">
                             <PayRow label="Gross Pay" value={activePaycheck.grossPay} />
                           </PaySection>
-                          <PaySection title="Deductions">
-                            <PayRow label="Pre-Tax Deductions" value={0} />
-                          </PaySection>
                           <PaySection title="Taxes">
                             <PayRow label="Federal Withholding" value={-activePaycheck.fedBefore} negative />
                             <PayRow label="State Withholding" value={-activePaycheck.stateBefore} negative />
                             <PayRow label="FICA (7.65%)" value={-activePaycheck.ficaBefore} negative />
+                          </PaySection>
+                          <PaySection title="Post-Tax Deductions">
+                            <PayRow label="Insurance Premium (post-tax)" value={-activePaycheck.preTaxPerPay} negative />
                           </PaySection>
                           <div style={{ height: 1, background: BORDER, margin: '12px 0' }} />
                           <PayRow label="Net Pay" value={activePaycheck.netBefore} bold />
