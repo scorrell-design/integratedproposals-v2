@@ -106,13 +106,6 @@ export interface ProposalResult {
   savingsRange: SavingsRange;
   netAnnualBenefit: number;
   totalAdminFee: number;
-  combinedAnnualTaxSavings: number;
-  combinedPerEmployeeSavings: number;
-  combinedSavingsBreakdown: {
-    employerFICA: number;
-    employeeFICA: number;
-    employeeFederalTax: number;
-  };
 }
 
 export interface TierResult {

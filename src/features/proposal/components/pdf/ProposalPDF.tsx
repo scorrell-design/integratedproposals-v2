@@ -258,7 +258,6 @@ export function ProposalPDF({ company, result, proposalType, brokerName, brokerE
   const date = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   const currentTaxYear = new Date().getFullYear();
   const qualifiedPct = result.totalEmployees > 0 ? Math.round((result.qualifiedEmployees / result.totalEmployees) * 100) : 0;
-  const bd = result.combinedSavingsBreakdown;
 
   return (
     <Document>
@@ -280,13 +279,8 @@ export function ProposalPDF({ company, result, proposalType, brokerName, brokerE
 
         <View style={s.divider} />
 
-        {/* KPI Cards — hero Combined first */}
+        {/* KPI Cards — 3 equal-width */}
         <View style={s.kpiRow}>
-          <View style={[s.kpiCard, { flex: 1.4, backgroundColor: 'rgba(0, 95, 120, 0.06)' }]}>
-            <Text style={s.kpiLabel}>Combined Annual Tax Savings</Text>
-            <Text style={[s.kpiValue, { fontSize: 28 }]}>{fmt(result.combinedAnnualTaxSavings)}</Text>
-            <Text style={s.kpiSublabel}>~{fmt(result.combinedPerEmployeeSavings)} per employee/year</Text>
-          </View>
           <View style={s.kpiCard}>
             <Text style={s.kpiLabel}>Annual Employer Savings</Text>
             <Text style={s.kpiValue}>{fmt(result.employerAnnualFICASavings)}</Text>
@@ -297,30 +291,11 @@ export function ProposalPDF({ company, result, proposalType, brokerName, brokerE
             <Text style={s.kpiValue}>{fmt(result.avgEmployeeAnnualSavings)}/yr</Text>
             <Text style={s.kpiSublabel}>Per qualified employee</Text>
           </View>
-        </View>
-
-        {/* Combined Savings Breakdown */}
-        <View style={{ borderRadius: 6, border: `0.5 solid ${BORDER}`, padding: 12, marginBottom: 14 }}>
-          <Text style={{ fontSize: 11, fontWeight: 600, color: INK, marginBottom: 8 }}>Combined Tax Savings — Composition</Text>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 4, borderBottom: `0.5 solid ${BORDER}` }}>
-            <Text style={{ fontSize: 9, color: MUTED }}>Employer FICA savings (7.65%)</Text>
-            <Text style={{ fontSize: 9, fontWeight: 600, color: INK }}>{fmt(bd.employerFICA)}</Text>
+          <View style={s.kpiCard}>
+            <Text style={s.kpiLabel}>Qualified Employees</Text>
+            <Text style={s.kpiValue}>{result.qualifiedEmployees} / {result.totalEmployees} ({qualifiedPct}%)</Text>
+            <Text style={s.kpiSublabel}>Meet income threshold</Text>
           </View>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 4, borderBottom: `0.5 solid ${BORDER}` }}>
-            <Text style={{ fontSize: 9, color: MUTED }}>Employee FICA savings (7.65%)</Text>
-            <Text style={{ fontSize: 9, fontWeight: 600, color: INK }}>{fmt(bd.employeeFICA)}</Text>
-          </View>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 4, borderBottom: `0.5 solid ${BORDER}` }}>
-            <Text style={{ fontSize: 9, color: MUTED }}>Employee federal tax avoidance (~22%)</Text>
-            <Text style={{ fontSize: 9, fontWeight: 600, color: INK }}>{fmt(bd.employeeFederalTax)}</Text>
-          </View>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 6, marginTop: 2 }}>
-            <Text style={{ fontSize: 10, fontWeight: 600, color: INK }}>Total combined annual savings</Text>
-            <Text style={{ fontSize: 12, fontWeight: 700, color: TEAL }}>{fmt(result.combinedAnnualTaxSavings)}</Text>
-          </View>
-          <Text style={{ fontSize: 8, color: MUTED, marginTop: 6, lineHeight: 1.4 }}>
-            Combined savings reflects total tax avoidance across employer payroll taxes and employee paycheck taxes when benefits are pre-taxed under Section 125. Employee federal tax estimate uses a 22% blended bracket; actual savings vary by individual filing status.
-          </Text>
         </View>
 
         {/* Qualified / Positively Impacted */}

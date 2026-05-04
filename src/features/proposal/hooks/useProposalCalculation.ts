@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { useProposalStore } from '../store/proposal.store';
-import { calculateTierResult, estimatePreTaxDeductions, calculateSavingsRange, calculateEmployerAnnualSavings, calculateCombinedSavings } from '../engine';
+import { calculateTierResult, estimatePreTaxDeductions, calculateSavingsRange, calculateEmployerAnnualSavings } from '../engine';
 import { FICA_RATES } from '@/config/fica-rates';
 import { ADMIN_FEE_ANNUAL } from '@/config/fica-rates';
 import type { ProposalResult, TierResult } from '../types/proposal.types';
@@ -107,16 +107,6 @@ export function useProposalCalculation() {
     const avgEmployeeSavings = company.employeeCount > 0 ? totalEmployeeSavings / company.employeeCount : 0;
     const savingsRange = calculateSavingsRange(employerAnnualFICASavings, 'quick_proposal');
 
-    const totalAnnualPreTax = tierResults.reduce(
-      (sum, tr) => sum + tr.avgPreTaxDeduction * tr.employeeCount,
-      0,
-    );
-
-    const combined = calculateCombinedSavings(
-      { totalAnnualPreTaxDeductions: totalAnnualPreTax },
-      totalPositive > 0 ? totalPositive : company.employeeCount,
-    );
-
     if (import.meta.env.DEV && hcEnabled) {
       const medAvg = (hc.medical.premiums.individual + hc.medical.premiums.family) / 2;
       const denAvg = (hc.dental.premiums.individual + hc.dental.premiums.family) / 2;
@@ -129,12 +119,6 @@ export function useProposalCalculation() {
       console.assert(
         Math.abs(employerAnnualFICASavings - Math.round(expectedSavings)) < 2,
         `KPI mismatch: got ${employerAnnualFICASavings}, expected ~${Math.round(expectedSavings)}`,
-      );
-
-      const expectedCombined = Math.round(totalAnnualPreTax * (0.0765 + 0.0765 + 0.22));
-      console.assert(
-        Math.abs(combined.combinedTotalSavings - expectedCombined) < 2,
-        `Combined savings mismatch: got ${combined.combinedTotalSavings}, expected ~${expectedCombined}`,
       );
     }
 
@@ -149,13 +133,6 @@ export function useProposalCalculation() {
       savingsRange,
       netAnnualBenefit: Math.round(netAnnualBenefit),
       totalAdminFee: Math.round(totalAdminFee),
-      combinedAnnualTaxSavings: combined.combinedTotalSavings,
-      combinedPerEmployeeSavings: combined.perEmployeeCombined,
-      combinedSavingsBreakdown: {
-        employerFICA: combined.employerFICASavings,
-        employeeFICA: combined.employeeFICASavings,
-        employeeFederalTax: combined.employeeFederalTaxSavings,
-      },
     };
 
     useProposalStore.getState().setResult(proposalResult);
